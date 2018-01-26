@@ -1,6 +1,6 @@
 package jaam.fpm.client;
 
-import jaam.fpm.Drawing;
+import jaam.fpm.client.Drawing;
 import org.newdawn.slick.*;
 
 public class PlayState extends BasicGame
@@ -20,9 +20,9 @@ public class PlayState extends BasicGame
 	@Override
 	public void update(final GameContainer gameContainer, final int i) throws SlickException {
 		Input input = gameContainer.getInput();
-		if (currentDrawing == null && input.isKeyPressed(KeyConfig.KEYCODE_START_DRAWING)) {
+		if (currentDrawing == null && input.isKeyPressed(KeyConfig.START_DRAWING)) {
 			currentDrawing = new Drawing();
-		} else if (currentDrawing != null && input.isKeyPressed(KeyConfig.KEYCODE_STOP_DRAWING)) {
+		} else if (currentDrawing != null && input.isKeyPressed(KeyConfig.STOP_DRAWING)) {
 			currentDrawing = null;
 		}
 

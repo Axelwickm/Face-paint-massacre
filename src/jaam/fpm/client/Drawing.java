@@ -1,4 +1,4 @@
-package jaam.fpm;
+package jaam.fpm.client;
 
 import com.sun.istack.internal.logging.Logger;
 import jaam.fpm.client.KeyConfig;
@@ -16,6 +16,9 @@ public class Drawing extends ImageBuffer {
     public static final int DRAWING_WIDTH = 100;
     public static final int DRAWING_HEIGHT = 200;
 
+    public static final int MINIMUM_BRUSH_SIZE = 0;
+    public static final int MAXIMUM_BRUSH_SIZE = 9;
+
     public static final Color[] COLORS = {
             Color.black,
             Color.red,
@@ -24,6 +27,8 @@ public class Drawing extends ImageBuffer {
             Color.yellow,
             Color.cyan
     };
+
+    private int brushSize = 0;
 
     public Drawing() throws SlickException {
         super(DRAWING_WIDTH, DRAWING_HEIGHT);
@@ -52,18 +57,36 @@ public class Drawing extends ImageBuffer {
                 System.out.println("Drawing is happening");
                 Point pt = getMouseLocationInImage(gc);
 
-                this.setRGBA(pt.x, pt.y, currentColor.getRedByte(), currentColor.getGreenByte(), currentColor.getBlueByte(), currentColor.getAlphaByte());
+
+                for (int dx = -brushSize; dx <= brushSize; ++dx) {
+                    if (pt.x + dx < 0) continue;
+                    if (pt.x + dx >= getWidth()) break;
+                    for (int dy = -brushSize; dy <= brushSize; ++dy) {
+                        if (pt.y + dy < 0) continue;
+                        if (pt.y + dy >= getHeight()) break;
+                        System.out.println("AAAAA");
+                        setRGBA(pt.x + dx, pt.y + dy
+                                , currentColor.getRedByte()
+                                , currentColor.getGreenByte()
+                                , currentColor.getBlueByte()
+                                , currentColor.getAlphaByte());
+                    }
+                }
             } else System.out.println("Mouse is not within image (probably)");
         } else {
             //System.out.println("Mose button is not down");
         }
 
-        if (input.isKeyPressed(KeyConfig.KEYCODE_NEXT_COLOR)) {
+        if (input.isKeyPressed(KeyConfig.NEXT_COLOR)) {
             if (++currentColorIndex >= COLORS.length) currentColorIndex = 0;
             System.out.println("Switched to next color (" + COLORS[currentColorIndex].toString() + ").");
-        } else if (input.isKeyPressed(KeyConfig.KEYCODE_PREV_COLOR)) {
+        } else if (input.isKeyPressed(KeyConfig.PREV_COLOR)) {
             if (--currentColorIndex < 0) currentColorIndex = COLORS.length - 1;
             System.out.println("Switched to previous color (" + COLORS[currentColorIndex].toString() + ").");
+        } else if (input.isKeyPressed(KeyConfig.BIGGER_BRUSH)) {
+            if (++brushSize > MAXIMUM_BRUSH_SIZE) brushSize = MAXIMUM_BRUSH_SIZE;
+        } else if (input.isKeyPressed(KeyConfig.SMALLER_BRUSH)) {
+            if (--brushSize < MINIMUM_BRUSH_SIZE) brushSize = MINIMUM_BRUSH_SIZE;
         }
     }
 
@@ -77,9 +100,9 @@ public class Drawing extends ImageBuffer {
         int xpos = (gc.getWidth() - (int)(scale * getWidth())) / 2;
         int ypos = (gc.getHeight() - (int)(scale * getHeight())) / 2;
 
-        // if (xpos != 0 && ypos != 0) Logger.getLogger(Drawing.class).log(Level.SEVERE, "Drawing might not have been properly scaled");
-
         getImage().draw(xpos, ypos, scale);
+
+        g.drawString("Brush size: " + brushSize, 10, 30);
     }
 
     public boolean isMouseWithinDrawing(GameContainer gc) {
