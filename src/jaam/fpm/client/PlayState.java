@@ -5,13 +5,15 @@ import org.newdawn.slick.*;
 
 public class PlayState extends BasicGame
 {
-
+	private World world;
 	private Drawing currentDrawing;
 
 	private Image lastImage;
 
 	public PlayState(String name) {
 		super(name);
+
+		world = new World();
 	}
 
 	@Override
@@ -20,7 +22,10 @@ public class PlayState extends BasicGame
 	}
 
 	@Override
-	public void update(final GameContainer gameContainer, final int i) throws SlickException {
+	public void update(final GameContainer gameContainer, final int dt) throws SlickException {
+
+		world.update(dt);
+
 		Input input = gameContainer.getInput();
 		if (currentDrawing == null && input.isKeyPressed(KeyConfig.START_DRAWING)) {
 			currentDrawing = new Drawing();
@@ -29,14 +34,12 @@ public class PlayState extends BasicGame
 			currentDrawing = null;
 		}
 
-		if (currentDrawing != null) currentDrawing.update(gameContainer, i);
-
-
-
+		if (currentDrawing != null) currentDrawing.update(gameContainer, dt);
 	}
 
 	@Override
 	public void render(final GameContainer gameContainer, final Graphics graphics) throws SlickException {
+		world.render(graphics);
 		if (currentDrawing != null) currentDrawing.render(gameContainer, graphics);
 	}
 }
