@@ -8,6 +8,8 @@ public class PlayState extends BasicGame
 
 	private Drawing currentDrawing;
 
+	private Image lastImage;
+
 	public PlayState(String name) {
 		super(name);
 	}
@@ -23,10 +25,13 @@ public class PlayState extends BasicGame
 		if (currentDrawing == null && input.isKeyPressed(KeyConfig.START_DRAWING)) {
 			currentDrawing = new Drawing();
 		} else if (currentDrawing != null && input.isKeyPressed(KeyConfig.STOP_DRAWING)) {
+			lastImage = currentDrawing.getImage();
 			currentDrawing = null;
 		}
 
 		if (currentDrawing != null) currentDrawing.update(gameContainer, i);
+
+
 
 	}
 

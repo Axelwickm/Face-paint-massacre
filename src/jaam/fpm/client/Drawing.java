@@ -25,7 +25,9 @@ public class Drawing extends ImageBuffer {
             Color.green,
             Color.blue,
             Color.yellow,
-            Color.cyan
+            Color.magenta,
+            Color.cyan,
+            Color.white
     };
 
     private int brushSize = 0;
@@ -54,7 +56,6 @@ public class Drawing extends ImageBuffer {
 
         if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
             if (isMouseWithinDrawing(gc)) {
-                System.out.println("Drawing is happening");
                 Point pt = getMouseLocationInImage(gc);
 
 
@@ -64,7 +65,6 @@ public class Drawing extends ImageBuffer {
                     for (int dy = -brushSize; dy <= brushSize; ++dy) {
                         if (pt.y + dy < 0) continue;
                         if (pt.y + dy >= getHeight()) break;
-                        System.out.println("AAAAA");
                         setRGBA(pt.x + dx, pt.y + dy
                                 , currentColor.getRedByte()
                                 , currentColor.getGreenByte()
@@ -72,9 +72,7 @@ public class Drawing extends ImageBuffer {
                                 , currentColor.getAlphaByte());
                     }
                 }
-            } else System.out.println("Mouse is not within image (probably)");
-        } else {
-            //System.out.println("Mose button is not down");
+            }
         }
 
         if (input.isKeyPressed(KeyConfig.NEXT_COLOR)) {
@@ -103,6 +101,7 @@ public class Drawing extends ImageBuffer {
         getImage().draw(xpos, ypos, scale);
 
         g.drawString("Brush size: " + brushSize, 10, 30);
+        g.drawString("Color: " + COLORS[currentColorIndex].toString(), 10, 50);
     }
 
     public boolean isMouseWithinDrawing(GameContainer gc) {
