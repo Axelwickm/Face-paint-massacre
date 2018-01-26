@@ -107,8 +107,8 @@ public class Drawing extends ImageBuffer {
     public boolean isMouseWithinDrawing(GameContainer gc) {
         Input input = gc.getInput();
 
-        float wscale = gc.getWidth() / getWidth();
-        float hscale = gc.getHeight() / getHeight();
+        float wscale = gc.getWidth() / (float)getWidth();
+        float hscale = gc.getHeight() / (float)getHeight();
         float scale = Math.min(wscale, hscale);
 
         int xpos = (gc.getWidth() - (int)(scale * getWidth())) / 2;
@@ -123,8 +123,8 @@ public class Drawing extends ImageBuffer {
     public Point getMouseLocationInImage(GameContainer gc) throws IllegalArgumentException {
         Input input = gc.getInput();
 
-        float wscale = gc.getWidth() / getWidth();
-        float hscale = gc.getHeight() / getHeight();
+        float wscale = gc.getWidth() / (float)getWidth();
+        float hscale = gc.getHeight() / (float)getHeight();
         float scale = Math.min(wscale, hscale);
 
         int xpos = (gc.getWidth() - (int)(scale * getWidth())) / 2;
