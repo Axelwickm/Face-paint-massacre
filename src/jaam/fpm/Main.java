@@ -10,21 +10,33 @@ import org.newdawn.slick.SlickException;
 
 public class Main extends BasicGame
 {
+	Drawing currentDrawing = null;
+
 	public Main(String gamename)
 	{
 		super(gamename);
 	}
 
 	@Override
-	public void init(GameContainer gc) throws SlickException {}
+	public void init(GameContainer gc) throws SlickException {
+		currentDrawing = new Drawing();
+		gc.setShowFPS(false);
+	}
 
 	@Override
-	public void update(GameContainer gc, int i) throws SlickException {}
+	public void update(GameContainer gc, int i) throws SlickException {
+		if (currentDrawing != null) {
+			currentDrawing.update(gc, i);
+		}
+	}
 
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
-		g.drawString("Howdy!", 10, 10);
+		if (currentDrawing != null) {
+			currentDrawing.render(gc, g);
+		}
+		//g.drawString("Howdy!", 10, 10);
 	}
 
 	public static void main(String[] args)
