@@ -12,7 +12,7 @@ public class Client {
 		{
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new PlayState("Simple Slick Game"));
-			appgc.setDisplayMode(640, 480, false);
+			appgc.setDisplayMode(800, 600, false);
 			appgc.start();
 		}
 		catch (SlickException ex)

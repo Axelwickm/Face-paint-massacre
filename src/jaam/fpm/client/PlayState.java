@@ -8,8 +8,12 @@ import org.newdawn.slick.SlickException;
 public class PlayState extends BasicGame
 {
 
+	private World world;
+
 	public PlayState(String name) {
 		super(name);
+
+		world = new World();
 	}
 
 	@Override
@@ -18,12 +22,12 @@ public class PlayState extends BasicGame
 	}
 
 	@Override
-	public void update(final GameContainer gameContainer, final int i) throws SlickException {
-
+	public void update(final GameContainer gameContainer, final int dt) throws SlickException {
+		world.update(dt);
 	}
 
 	@Override
 	public void render(final GameContainer gameContainer, final Graphics graphics) throws SlickException {
-
+		world.render(graphics);
 	}
 }
