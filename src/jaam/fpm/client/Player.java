@@ -25,5 +25,4 @@ public class Player {
 		g.translate(400, 300);
 		g.draw(rect);
 	}
-
 }

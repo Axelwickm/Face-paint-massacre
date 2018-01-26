@@ -1,14 +1,12 @@
 package jaam.fpm.client;
 
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import jaam.fpm.Drawing;
+import org.newdawn.slick.*;
 
 public class PlayState extends BasicGame
 {
-
 	private World world;
+	private Drawing currentDrawing;
 
 	public PlayState(String name) {
 		super(name);
@@ -23,11 +21,22 @@ public class PlayState extends BasicGame
 
 	@Override
 	public void update(final GameContainer gameContainer, final int dt) throws SlickException {
+
 		world.update(dt);
+
+		Input input = gameContainer.getInput();
+		if (currentDrawing == null && input.isKeyPressed(KeyConfig.KEYCODE_START_DRAWING)) {
+			currentDrawing = new Drawing();
+		} else if (currentDrawing != null && input.isKeyPressed(KeyConfig.KEYCODE_STOP_DRAWING)) {
+			currentDrawing = null;
+		}
+
+		if (currentDrawing != null) currentDrawing.update(gameContainer, dt);
 	}
 
 	@Override
 	public void render(final GameContainer gameContainer, final Graphics graphics) throws SlickException {
 		world.render(graphics);
+		if (currentDrawing != null) currentDrawing.render(gameContainer, graphics);
 	}
 }
