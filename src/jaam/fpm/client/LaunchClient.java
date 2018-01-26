@@ -39,9 +39,7 @@ public class LaunchClient {
 			e.printStackTrace();
 		}
 
-		System.out.println("HERE");
 		client.sendTCP(TestPacket.make(0.5f));
-
 
 
 		try
