@@ -1,6 +1,7 @@
 package jaam.fpm;
 
 import com.sun.istack.internal.logging.Logger;
+import jaam.fpm.client.KeyConfig;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -38,8 +39,7 @@ public class Drawing extends ImageBuffer {
 
     int currentColorIndex;
 
-    public static final int KEYCODE_NEXT_COLOR = Input.KEY_Q;
-    public static final int KEYCODE_PREV_COLOR = Input.KEY_E;
+
 
     public void update(GameContainer gc, int i) {
         if (!isActive) return;
@@ -58,10 +58,10 @@ public class Drawing extends ImageBuffer {
             //System.out.println("Mose button is not down");
         }
 
-        if (input.isKeyPressed(KEYCODE_NEXT_COLOR)) {
+        if (input.isKeyPressed(KeyConfig.KEYCODE_NEXT_COLOR)) {
             if (++currentColorIndex >= COLORS.length) currentColorIndex = 0;
             System.out.println("Switched to next color (" + COLORS[currentColorIndex].toString() + ").");
-        } else if (input.isKeyPressed(KEYCODE_PREV_COLOR)) {
+        } else if (input.isKeyPressed(KeyConfig.KEYCODE_PREV_COLOR)) {
             if (--currentColorIndex < 0) currentColorIndex = COLORS.length - 1;
             System.out.println("Switched to previous color (" + COLORS[currentColorIndex].toString() + ").");
         }
