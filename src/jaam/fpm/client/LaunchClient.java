@@ -39,11 +39,8 @@ public class LaunchClient {
 			e.printStackTrace();
 		}
 
-		System.out.println("HERE");
 		client.sendTCP(TestPacket.make(0.5f));
 
-
-/*
 		try
 		{
 			AppGameContainer appgc;
@@ -54,6 +51,6 @@ public class LaunchClient {
 		catch (SlickException ex)
 		{
 			Logger.getLogger(PlayState.class.getName()).log(Level.SEVERE, null, ex);
-		}*/
+		}
 	}
 }
