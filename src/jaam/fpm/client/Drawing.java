@@ -32,6 +32,8 @@ public class Drawing extends ImageBuffer {
 
     private int brushSize = 0;
 
+    private boolean isErasing = false;
+
     public Drawing() throws SlickException {
         super(DRAWING_WIDTH, DRAWING_HEIGHT);
         isActive = true;
@@ -65,11 +67,16 @@ public class Drawing extends ImageBuffer {
                     for (int dy = -brushSize; dy <= brushSize; ++dy) {
                         if (pt.y + dy < 0) continue;
                         if (pt.y + dy >= getHeight()) break;
-                        setRGBA(pt.x + dx, pt.y + dy
-                                , currentColor.getRedByte()
-                                , currentColor.getGreenByte()
-                                , currentColor.getBlueByte()
-                                , currentColor.getAlphaByte());
+                        if (isErasing) setRGBA(pt.x + dx, pt.y + dy
+                                              , 0
+                                              , 0
+                                              , 0
+                                              , 0);
+                        else setRGBA(pt.x + dx, pt.y + dy
+                                    , currentColor.getRedByte()
+                                    , currentColor.getGreenByte()
+                                    , currentColor.getBlueByte()
+                                    , currentColor.getAlphaByte());
                     }
                 }
             }
@@ -85,6 +92,8 @@ public class Drawing extends ImageBuffer {
             if (++brushSize > MAXIMUM_BRUSH_SIZE) brushSize = MAXIMUM_BRUSH_SIZE;
         } else if (input.isKeyPressed(KeyConfig.SMALLER_BRUSH)) {
             if (--brushSize < MINIMUM_BRUSH_SIZE) brushSize = MINIMUM_BRUSH_SIZE;
+        } else if (input.isKeyPressed(KeyConfig.TOGGLE_ERASE)) {
+            isErasing = !isErasing;
         }
     }
 
@@ -102,6 +111,7 @@ public class Drawing extends ImageBuffer {
 
         g.drawString("Brush size: " + brushSize, 10, 30);
         g.drawString("Color: " + COLORS[currentColorIndex].toString(), 10, 50);
+        g.drawString("Eraser: " + (isErasing ? "Active" : "Inactive"), 10, 70);
     }
 
     public boolean isMouseWithinDrawing(GameContainer gc) {
