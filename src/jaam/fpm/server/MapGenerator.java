@@ -10,19 +10,31 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MapGenerator {
+    public static final int ROOMS_PER_PLAYER = 2;
+    public static final int CORRIDORS_PER_PLAYER = 2;
+    public static final float UNITS_PER_PLAYER = 7;
+
     public static ArrayList<Float[]> positions;
 
     public static Tile[][] generate(int players){
+        DungeonGenerator.roomCount = players*ROOMS_PER_PLAYER;
+        DungeonGenerator.corridorCount = players*CORRIDORS_PER_PLAYER;
+
+        DungeonGenerator.mapSize = (int) Math.sqrt(players*UNITS_PER_PLAYER);
+
         DungeonGenerator.generate();
         DungeonRenderer.view();
 
         BufferedImage img = DungeonRenderer.drawFinalDungeon();
+        ArrayList<Float[]> nicePositions = new ArrayList<>();
 
         Tile[][] tiles = new Tile[img.getHeight()][img.getWidth()];
         for (int y = 0; y < img.getHeight(); y++){
             for (int x = 0; x < img.getWidth(); x++){
                 if (img.getRGB(x, y) == -16711936){
                     tiles[y][x] = Tile.FLOOR;
+                    Float[] p = {x+.5f, y+.5f};
+                    nicePositions.add(p);
                 }
                 else {
                     tiles[y][x] = Tile.WALL;
@@ -33,14 +45,7 @@ public class MapGenerator {
         positions = new ArrayList<>();
         Random rand = new Random();
         for (int i = 0; i<players; i++){
-            Room randomRoom = DungeonGenerator.rooms.get(rand.nextInt(DungeonGenerator.rooms.size()));
-            Float[] position = new Float[2]; /*{
-                    (float) randomRoom.getCenterX()+img.getWidth()/2.f+0.5f,
-                    (float) randomRoom.getCenterY()+img.getWidth()/2.f+0.5f
-            };*/
-            position[0] = 20.f;
-            position[1] = 20.f;
-            MapGenerator.positions.add(position);
+            MapGenerator.positions.add(nicePositions.get(rand.nextInt(nicePositions.size())));
         }
 
         return tiles;

@@ -32,7 +32,7 @@ public class DungeonRenderer {
 	}
 	
 	public static BufferedImage drawFinalDungeon() {
-		int size = (DungeonGenerator.mapSize+DungeonGenerator.maxSideLength)*3;
+		int size = (DungeonGenerator.mapSize+DungeonGenerator.maxSideLength)*4;
 		int half = size/2;
 		BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = img.createGraphics();
@@ -51,7 +51,7 @@ public class DungeonRenderer {
 	}
 	
 	public static void drawFinalDungeon2(int count) {
-		int size = (DungeonGenerator.mapSize+DungeonGenerator.maxSideLength)*3;
+		int size = (DungeonGenerator.mapSize+DungeonGenerator.maxSideLength)*10;
 		int half = size/2;
 		BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = img.createGraphics();

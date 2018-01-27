@@ -19,12 +19,14 @@ public class PlayState {
     public boolean drawingMode;
     public Tile[][] world;
     public HashMap<Integer, Player> players;
+    public int playerCount;
 
     private HashMap<Vector2f, byte[]> notes = new HashMap<>();
 
     public PlayState() {
         running = false;
         ticks = 0;
+        playerCount = 0;
 
         drawingMode = true;
         players = new HashMap<>();
@@ -57,12 +59,12 @@ public class PlayState {
         }
         else {
             boolean allReady = true;
-            int playerCount = 0;
+            this.playerCount = 0;
             for (Player  p : players.values()){
                 if (!p.ready) allReady = false;
-                playerCount++;
+                this.playerCount++;
             }
-            if (allReady && playerCount > 0){
+            if (allReady && this.playerCount > 0){
                 startGame();
             }
         }
@@ -74,7 +76,7 @@ public class PlayState {
         System.out.println("All players ready, starting game.");
 
         this.drawingMode = false;
-        Tile[][] world = MapGenerator.generate(1);
+        Tile[][] world = MapGenerator.generate(playerCount);
         float[][] positions = MapGenerator.getFreePosition();
 
         TileArrayPacket tileArrayPacket = TileArrayPacket.make(world, positions);

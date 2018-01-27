@@ -3,4 +3,5 @@ out/
 .idea/tasks.xml
 .idea/dictionary
 .idea/uiDesigner.xml
-gen/
+gen/*
+out.bmp
