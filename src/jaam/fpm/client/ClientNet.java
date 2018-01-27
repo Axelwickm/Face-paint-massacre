@@ -32,6 +32,8 @@ public class ClientNet {
         kryo.register(org.newdawn.slick.geom.Vector2f.class);
 
         kryo.register(byte[].class);
+        kryo.register(float[].class);
+        kryo.register(float[][].class);
 
         client.start();
 

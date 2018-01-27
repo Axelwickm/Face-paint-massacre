@@ -52,7 +52,12 @@ public class World {
 	public void update(final GameContainer gc, final int dt) {
 		if (!populated) {
 			if (tileArrayPacket != null) {
+				player.setPosition(new Vector2f(tileArrayPacket.playerPositions[0][0]*Tile.PIXELS,
+						tileArrayPacket.playerPositions[0][1]*Tile.PIXELS
+				));
 				createChunks(tileArrayPacket.tilesX, tileArrayPacket.tilesY, tileArrayPacket.tiles);
+
+
 				populated = true;
 				tileArrayPacket = null;
 			}

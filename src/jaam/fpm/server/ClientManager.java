@@ -38,7 +38,11 @@ public class ClientManager extends Listener {
         kryo.register(Tile[].class);
         kryo.register(Tile[][].class);
 
+        kryo.register(org.newdawn.slick.geom.Vector2f.class);
+
         kryo.register(byte[].class);
+        kryo.register(float[].class);
+        kryo.register(float[][].class);
         //kryo.register(Image.class);
         //kryo.register(Drawing.class); // I literally never send Drawings, but I still get exceptions if I don't register them. Because of course I do.
 
