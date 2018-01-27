@@ -12,7 +12,11 @@ import jaam.fpm.shared.Tile;
 import java.io.IOException;
 
 public class ClientNet {
+
     public Client client;
+
+    public volatile World world;
+
     public ClientNet() {
         this.client = new Client();
         Kryo kryo = client.getKryo();
@@ -44,6 +48,9 @@ public class ClientNet {
                 super.received(connection, object);
                 if (object instanceof  TileArrayPacket){
                     System.out.println("Received world");
+					TileArrayPacket p = (TileArrayPacket) object;
+					while (world == null) {}
+					world.createChunks(p.tilesX, p.tilesY, p.tiles);
                 }
                 else if (object instanceof NewPlayerPacket){
                     System.out.println("Client id: "+((NewPlayerPacket) object).connection_id);

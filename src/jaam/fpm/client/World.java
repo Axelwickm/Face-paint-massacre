@@ -19,25 +19,11 @@ public class World {
 
 	private Image background;
 
+	private boolean populated = false;
+
 	public World() {
 		player = new Player(this);
 		camera = new Camera();
-
-		// TODO: REMOVE
-		int t_cx = 5;
-		int t_cy = 5;
-
-		Tile[][] t_tiles = new Tile[Chunk.SIZE * t_cx][Chunk.SIZE * t_cy];
-		for (int i = 0; i < t_tiles.length; i++) {
-			for (int j = 0; j < t_tiles[i].length; j++) {
-				if (j % Chunk.SIZE == 0 || i % Chunk.SIZE == 0)
-					t_tiles[i][j] = Tile.WALL;
-				else
-					t_tiles[i][j] = Tile.FLOOR;
-			}
-		}
-
-		createChunks(Chunk.SIZE * t_cx, Chunk.SIZE * t_cy, t_tiles);
 	}
 
 	public Vector2f getCameraPosition() {
@@ -55,12 +41,17 @@ public class World {
 	}
 
 	public void update(final GameContainer gc, final int dt) {
+		if (!populated)
+			return;
 		player.update(gc, dt);
 
 		camera.update(player.getPosition(), dt);
 	}
 
 	public void render(final Graphics g) {
+		if (!populated)
+			return;
+
 		background.draw(0, 0);
 
 		camera.translate(g);
@@ -106,6 +97,8 @@ public class World {
 
 		chunks = new Chunk[chunksY][chunksX];
 
+		System.out.println(tiles);
+
 		for (int cy = 0; cy < chunksY; cy++) {
 			for (int cx = 0; cx < chunksX; cx++) {
 				Tile[][] chunkTiles = new Tile[Chunk.SIZE][Chunk.SIZE];
@@ -120,6 +113,6 @@ public class World {
 			}
 		}
 
-		this.chunks = chunks;
+		populated = true;
 	}
 }
