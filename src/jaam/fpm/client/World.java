@@ -1,6 +1,7 @@
 package jaam.fpm.client;
 
 import jaam.fpm.shared.Tile;
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
 public class World {
@@ -25,8 +26,12 @@ public class World {
 		createChunks(3, 3, t_tiles);
 	}
 
-	public void update(final int dt) {
-		player.update(dt);
+	public void init(final GameContainer gc) {
+		gc.getInput().addKeyListener(player);
+	}
+
+	public void update(final GameContainer gc, final int dt) {
+		player.update(gc, dt);
 	}
 
 	public void render(final Graphics g) {

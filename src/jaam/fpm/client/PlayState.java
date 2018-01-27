@@ -16,12 +16,13 @@ public class PlayState extends BasicGame
 	public void init(final GameContainer gameContainer) throws SlickException {
 		System.out.println("Init game");
 		world = new World();
+		world.init(gameContainer);
 	}
 
 	@Override
 	public void update(final GameContainer gameContainer, final int dt) throws SlickException {
 
-		world.update(dt);
+		world.update(gameContainer, dt);
 
 		/*Input input = gameContainer.getInput();
 		if (currentDrawing == null && input.isKeyPressed(KeyConfig.KEYCODE_START_DRAWING)) {
