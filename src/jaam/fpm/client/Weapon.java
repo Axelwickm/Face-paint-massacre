@@ -1,5 +1,6 @@
 package jaam.fpm.client;
 
+import jaam.fpm.packet.PlayerActionPacket;
 import org.newdawn.slick.Graphics;
 
 public abstract class Weapon {

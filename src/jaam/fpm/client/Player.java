@@ -72,8 +72,10 @@ public class Player implements KeyListener {
 			sendWalkPacket();
 		}
 
-		if (key == KeyConfig.TOGGLE_WEAPON)
+		if (key == KeyConfig.TOGGLE_WEAPON) {
+			world.getClient().sendTCP(PlayerActionPacket.make(PlayerActionPacket.Action.TOGGLE_WEAPON));
 			weapon.toggle();
+		}
 		if (key == KeyConfig.USE_WEAPON)
 			weapon.use();
 	}
@@ -113,7 +115,8 @@ public class Player implements KeyListener {
 	@Override public void inputEnded() { }
 
 	public void update(final GameContainer gameContainer, final int dt) {
-
+		if (health <= 0)
+			return;
 
 		// Move
 		if (dir.lengthSquared() != 0) {
@@ -213,4 +216,12 @@ public class Player implements KeyListener {
 	public Weapon getWeapon() {
 		return weapon;
 	}
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
 }

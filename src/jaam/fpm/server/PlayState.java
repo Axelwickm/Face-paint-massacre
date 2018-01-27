@@ -75,11 +75,16 @@ public class PlayState {
                 p.update(delta);
                 this.aliveCount += p.state == State.AlIVE ? 1 : 0;
             }
-            if (aliveCount == 0){
+
+            if (ticks == 1000){
+                chooseMurderer();
+            }
+            if (aliveCount == 0 && 1 < playerCount){
                 restartGame();
             }
         }
         else {
+            ticks = 0;
             boolean allReady = true;
             this.playerCount = 0;
             for (Player  p : players.values()){
@@ -127,9 +132,11 @@ public class PlayState {
     public void placeNote(Vector2f location, byte[] image) { notes.put(location, image); }
 
     public void chooseMurderer(){
+        System.out.println("Choosing murderer");
         Random rand = new Random();
 
         Player pm = (Player) players.values().toArray()[rand.nextInt(playerCount)];
+        pm.state = State.MURDERER;
         {
             GameStatusChangePacket p = GameStatusChangePacket.make(MURDERER_CHOOSEN);
             p.IAmTheMurderer = true;

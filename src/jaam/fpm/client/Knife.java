@@ -36,7 +36,7 @@ public class Knife extends Weapon {
 		}
 
 		if (player.getWorld().getMe().getPosition().distance(player.getPosition().copy().add(dir.copy().scale(SIZE))) < Player.SIZE) {
-			player.health -= DAMAGE;
+			player.getWorld().getMe().health -= DAMAGE;
 		}
 	}
 

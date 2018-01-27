@@ -104,6 +104,10 @@ public class ClientManager extends Listener {
                 case POST_NOTE:
                     playState.placeNote(playState.players.get(connection.getID()).getPosition(), packet.drawing);
                     break;
+				case USE_WEAPON:
+				case TOGGLE_WEAPON:
+					//TODO: NOTHING!
+					break;
                 default:
                     throw new UnsupportedOperationException("Can't handle PlayerActionPacket with action: " + packet.action.name());
             }
