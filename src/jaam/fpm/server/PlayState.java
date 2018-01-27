@@ -8,7 +8,9 @@ import org.newdawn.slick.geom.Vector2f;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 
+import static jaam.fpm.packet.GameStatusChangePacket.StatusChange.MURDERER_CHOOSEN;
 import static jaam.fpm.packet.GameStatusChangePacket.StatusChange.RESTART_GAME;
 import static java.lang.Math.abs;
 
@@ -122,4 +124,23 @@ public class PlayState {
     }
 
     public void placeNote(Vector2f location, byte[] image) { notes.put(location, image); }
+
+    public void chooseMurderer(){
+        Random rand = new Random();
+
+        Player pm = (Player) players.values().toArray()[rand.nextInt(playerCount)];
+        {
+            GameStatusChangePacket p = GameStatusChangePacket.make(MURDERER_CHOOSEN);
+            p.IAmTheMurderer = true;
+            pm.sendGameStatusChange(p);
+        }
+
+        for (Player pa : players.values()){
+            if (pa != pm){
+                GameStatusChangePacket p = GameStatusChangePacket.make(MURDERER_CHOOSEN);
+                p.IAmTheMurderer = false;
+                pa.sendGameStatusChange(p);
+            }
+        }
+    }
 }

@@ -6,6 +6,7 @@ public class GameStatusChangePacket {
     private GameStatusChangePacket(){}
 
     public StatusChange statusChange;
+    public boolean IAmTheMurderer;
 
 
     public static GameStatusChangePacket make(StatusChange statusChange){
