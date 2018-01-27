@@ -4,7 +4,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import jaam.fpm.packet.TestPacket;
+import jaam.fpm.packet.PlayerActionPacket;
+import jaam.fpm.packet.TileArrayPacket;
 
 import java.io.IOException;
 
@@ -12,7 +13,8 @@ public class ClientNet {
     public ClientNet() {
         Client client = new Client();
         Kryo kryo = client.getKryo();
-        kryo.register(TestPacket.class);
+        kryo.register(PlayerActionPacket.class);
+        kryo.register(TileArrayPacket.class);
         client.start();
 
         client.addListener(new Listener(){
@@ -34,7 +36,5 @@ public class ClientNet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        client.sendTCP(TestPacket.make(0.5f));
     }
 }

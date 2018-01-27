@@ -12,13 +12,12 @@ public class PlayState extends BasicGame
 
 	public PlayState(String name) {
 		super(name);
-
-		world = new World();
 	}
 
 	@Override
 	public void init(final GameContainer gameContainer) throws SlickException {
 		System.out.println("Init game");
+		world = new World();
 	}
 
 	@Override
@@ -40,6 +39,6 @@ public class PlayState extends BasicGame
 	@Override
 	public void render(final GameContainer gameContainer, final Graphics graphics) throws SlickException {
 		world.render(graphics);
-		if (currentDrawing != null) currentDrawing.render(gameContainer, graphics);
+		//if (currentDrawing != null) currentDrawing.render(gameContainer, graphics);
 	}
 }
