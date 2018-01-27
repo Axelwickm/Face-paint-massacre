@@ -74,7 +74,7 @@ public class PlayState {
         System.out.println("All players ready, starting game.");
 
         this.drawingMode = false;
-        Tile[][] world = MapGenerator.generate();
+        Tile[][] world = MapGenerator.generate(1);
         float[][] positions = MapGenerator.getFreePosition();
 
         TileArrayPacket tileArrayPacket = TileArrayPacket.make(world, positions);

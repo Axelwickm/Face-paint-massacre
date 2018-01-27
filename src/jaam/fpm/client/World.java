@@ -44,6 +44,7 @@ public class World {
 		try {
 			background = new Image("res/texture/bg.png");
 			fogOfWar = new Image("res/texture/fow.png");
+			Tile.loadImages();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
@@ -52,6 +53,7 @@ public class World {
 	public void update(final GameContainer gc, final int dt) {
 		if (!populated) {
 			if (tileArrayPacket != null) {
+                System.out.println("Player pos: "+tileArrayPacket.playerPositions[0][0]+" "+tileArrayPacket.playerPositions[0][1]);
 				player.setPosition(new Vector2f(tileArrayPacket.playerPositions[0][0]*Tile.PIXELS,
 						tileArrayPacket.playerPositions[0][1]*Tile.PIXELS
 				));
