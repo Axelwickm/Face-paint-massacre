@@ -31,7 +31,7 @@ public class PlayState extends BasicGame
 		if (currentDrawing == null && input.isKeyPressed(KeyConfig.START_DRAWING)) {
 			currentDrawing = new Drawing();
 		} else if (currentDrawing != null && input.isKeyPressed(KeyConfig.STOP_DRAWING)) {
-			lastImage = currentDrawing.getImage();
+			lastImage = currentDrawing.getImage(Image.FILTER_NEAREST);
 			currentDrawing = null;
 		}
 

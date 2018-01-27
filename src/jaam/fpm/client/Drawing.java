@@ -105,7 +105,7 @@ public class Drawing extends ImageBuffer {
 		int xpos = (gc.getWidth() - (int)(scale * getWidth())) / 2;
 		int ypos = (gc.getHeight() - (int)(scale * getHeight())) / 2;
 
-		getImage().draw(xpos + translateX, ypos + translateY, scale);
+		getImage(Image.FILTER_NEAREST).draw(xpos + translateX, ypos + translateY, scale);
 
 		g.drawString("Brush size: " + brushSize + " (Z and X to change)", 10 + translateX, 30 + translateY);
 		g.drawString("Color: " + COLORS[currentColorIndex].toString() + " (Q and E to change)", 10 + translateX, 50 + translateY);
