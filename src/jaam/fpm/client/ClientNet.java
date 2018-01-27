@@ -6,6 +6,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.packet.TileArrayPacket;
+import jaam.fpm.shared.Tile;
 
 import java.io.IOException;
 
@@ -15,6 +16,7 @@ public class ClientNet {
         Kryo kryo = client.getKryo();
         kryo.register(PlayerActionPacket.class);
         kryo.register(TileArrayPacket.class);
+        kryo.register(Tile[][].class);
         client.start();
 
         client.addListener(new Listener(){
@@ -28,6 +30,14 @@ public class ClientNet {
             public void disconnected(Connection connection) {
                 super.disconnected(connection);
                 System.out.printf("Disconnected");
+            }
+
+            @Override
+            public void received(Connection connection, Object o) {
+                super.received(connection, o);
+                if (o instanceof  TileArrayPacket){
+                    System.out.printf("Recived world");
+                }
             }
         });
 

@@ -1,5 +1,7 @@
 package jaam.fpm.server;
 
+import jaam.fpm.shared.Tile;
+
 import static java.lang.Math.abs;
 
 public class PlayState {
@@ -9,10 +11,13 @@ public class PlayState {
     public boolean running;
     public int ticks;
 
+    public Tile[][] world;
 
     public PlayState() {
         running = false;
         ticks = 0;
+
+        world = MapGenerator.generate(100,100);
     }
 
     public void start(){

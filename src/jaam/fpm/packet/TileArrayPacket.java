@@ -8,7 +8,7 @@ public class TileArrayPacket {
 
     private TileArrayPacket(){}
 
-    public static TileArrayPacket make(int tilesX, int tilesY, Tile[][] tiles){
+    public static TileArrayPacket make(Tile[][] tiles){
         TileArrayPacket p = new TileArrayPacket();
         p.tilesX = tiles.length;
         p.tilesY = tiles[0].length;
