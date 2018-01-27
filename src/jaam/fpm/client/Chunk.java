@@ -9,6 +9,8 @@ public class Chunk {
 
 	public static int SIZE = 8;
 
+	public static int PIXELS = SIZE * Tile.PIXELS;
+
 	private Tile[][] tiles;
 
 	private int x;
@@ -22,7 +24,7 @@ public class Chunk {
 		this.tiles = tiles;
 
 		try {
-			image = new Image(Chunk.SIZE * Tile.PIXELS, Chunk.SIZE * Tile.PIXELS);
+			image = new Image(Chunk.PIXELS, Chunk.PIXELS);
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
@@ -48,6 +50,6 @@ public class Chunk {
 	}
 
 	public void render() {
-		image.draw(x * Chunk.SIZE * Tile.PIXELS, y * Chunk.SIZE * Tile.PIXELS);
+		image.draw(x * Chunk.PIXELS, y * Chunk.PIXELS);
 	}
 }

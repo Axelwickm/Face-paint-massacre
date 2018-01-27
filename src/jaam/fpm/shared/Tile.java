@@ -19,7 +19,7 @@ public enum Tile {
 		try {
 			switch(this) {
 				case FLOOR:   return new Image("res/texture/floor.png");
-				default:      return null;
+				case WALL:    return new Image("res/texture/wall.png");
 			}
 		} catch (SlickException e) {
 			e.printStackTrace();

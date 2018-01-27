@@ -14,6 +14,8 @@ public class Player implements KeyListener {
 
 	public static final float DEFAULT_SPEED = .3f;
 
+	public static final int VIEW_RADIUS = 1;
+
 	private Vector2f position = new Vector2f();
 	private Vector2f dir =  new Vector2f();
 
@@ -64,8 +66,38 @@ public class Player implements KeyListener {
 	}
 
 	public void render(final Graphics g) {
-		g.translate(400, 300);
-
 		g.fillRect(position.x, position.y, SIZE, SIZE);
+	}
+
+	public int getChunkX() {
+		return Math.floorDiv((int) position.x, Chunk.PIXELS);
+	}
+
+	public int getChunkY() {
+		return Math.floorDiv((int) position.y, Chunk.PIXELS);
+	}
+
+	public Vector2f getPosition() {
+		return position;
+	}
+
+	public void setPosition(final Vector2f position) {
+		this.position = position;
+	}
+
+	public Vector2f getDir() {
+		return dir;
+	}
+
+	public void setDir(final Vector2f dir) {
+		this.dir = dir;
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(final float speed) {
+		this.speed = speed;
 	}
 }

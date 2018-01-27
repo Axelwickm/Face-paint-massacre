@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LaunchClient {
+
 	public static void main(String[] args) {
 		ClientNet clientNet = new ClientNet();
 
@@ -22,7 +23,7 @@ public class LaunchClient {
 		{
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new PlayState("Simple Slick Game"));
-			appgc.setDisplayMode(640, 480, false);
+			appgc.setDisplayMode(Settings.SCREEN_WIDTH, Settings.SCREEN_HEIGHT, false);
 			appgc.start();
 		}
 		catch (SlickException ex)

@@ -3,8 +3,12 @@ package jaam.fpm.client;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 
 public class World {
+
+	private Camera camera;
 
 	private Player player;
 
@@ -12,35 +16,67 @@ public class World {
 	private int chunksX, chunksY;
 	private int tilesX, tilesY;
 
+	private Image background;
+
 	public World() {
 		player = new Player();
+		camera = new Camera();
 
 		// TODO: REMOVE
-		Tile[][] t_tiles = new Tile[3][3];
+		int t_cx = 5;
+		int t_cy = 5;
+
+		Tile[][] t_tiles = new Tile[Chunk.SIZE * t_cx][Chunk.SIZE * t_cy];
 		for (int i = 0; i < t_tiles.length; i++) {
 			for (int j = 0; j < t_tiles[i].length; j++) {
-				t_tiles[i][j] = Tile.FLOOR;
+				if (j % Chunk.SIZE == 0 || i % Chunk.SIZE == 0)
+					t_tiles[i][j] = Tile.WALL;
+				else
+					t_tiles[i][j] = Tile.FLOOR;
 			}
 		}
 
-		createChunks(3, 3, t_tiles);
+		createChunks(Chunk.SIZE * t_cx, Chunk.SIZE * t_cy, t_tiles);
 	}
 
 	public void init(final GameContainer gc) {
 		gc.getInput().addKeyListener(player);
+
+		try {
+			background = new Image("res/texture/bg.png");
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void update(final GameContainer gc, final int dt) {
 		player.update(gc, dt);
+
+		camera.update(player.getPosition(), dt);
 	}
 
 	public void render(final Graphics g) {
-		for (Chunk[] arr : chunks) {
-			for (Chunk c : arr) {
-				c.render();
+		background.draw(0, 0);
+
+		camera.translate(g);
+
+		for (int i = 0; i < Player.VIEW_RADIUS * 2 + 1; i++) {
+			for (int j = 0; j < Player.VIEW_RADIUS * 2 + 1; j++) {
+				renderChunk(j - Player.VIEW_RADIUS + player.getChunkX(),
+							i - Player.VIEW_RADIUS + player.getChunkY());
 			}
 		}
+
 		player.render(g);
+	}
+
+	private boolean renderChunk(final int x, final int y) {
+		if (x >= 0 && x < chunksX && y >= 0 && y < chunksY) {
+			chunks[y][x].render();
+			return true;
+		}
+
+		return false;
 	}
 
 	public void createChunks(int tilesX, int tilesY, Tile[][] tiles) {
