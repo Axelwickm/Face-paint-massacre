@@ -12,6 +12,7 @@ public class TileArrayPacket {
         TileArrayPacket p = new TileArrayPacket();
         p.tilesX = tiles[0].length;
         p.tilesY = tiles.length;
+        p.tiles = tiles;
         return p;
     }
 }

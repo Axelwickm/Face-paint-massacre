@@ -24,7 +24,6 @@ public class PlayState {
         ticks = 0;
 
         drawingMode = true;
-        world = MapGenerator.generate(100,100);
         players = new HashMap<>();
     }
 
@@ -72,8 +71,9 @@ public class PlayState {
         System.out.println("All players ready, starting game.");
 
         this.drawingMode = false;
+        Tile[][] world = MapGenerator.generate(100,100);
 
-        TileArrayPacket tileArrayPacket = TileArrayPacket.make(this.world);
+        TileArrayPacket tileArrayPacket = TileArrayPacket.make(world);
         for (Player  p : players.values()){
             p.sendWorld(tileArrayPacket);
         }

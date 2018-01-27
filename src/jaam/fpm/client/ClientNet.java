@@ -45,8 +45,11 @@ public class ClientNet {
                 if (object instanceof  TileArrayPacket){
                     System.out.println("Received world");
                 }
-                else if (object instanceof NewPlayerPacket){
-                    System.out.println("Client id: "+((NewPlayerPacket) object).connection_id);
+                else if (object instanceof NewPlayerPacket){ // Other player added
+                    System.out.println("Connection id: "+((NewPlayerPacket) object).connection_id);
+                }
+                else if (object instanceof PlayerActionPacket){ // Action from other player
+
                 }
             }
         });
