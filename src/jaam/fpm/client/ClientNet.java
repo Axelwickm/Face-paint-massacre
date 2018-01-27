@@ -45,7 +45,7 @@ public class ClientNet {
                     System.out.println("Received world");
                 }
                 else if (object instanceof NewPlayerPacket){
-                    System.out.println("Client id: "+client.getID());
+                    System.out.println("Client id: "+((NewPlayerPacket) object).connection_id);
                 }
             }
         });
@@ -55,5 +55,7 @@ public class ClientNet {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        client.sendTCP(PlayerActionPacket.make(PlayerActionPacket.Action.READY));
     }
 }

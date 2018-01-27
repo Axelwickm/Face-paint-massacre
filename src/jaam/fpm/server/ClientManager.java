@@ -40,17 +40,16 @@ public class ClientManager extends Listener {
         server.addListener(this);
     }
 
-    public void sendWorld(){
-        TileArrayPacket p = TileArrayPacket.make(playState.world);
-        server.sendToAllTCP(p);
-    }
 
     @Override
     public void connected(Connection connection) {
-        Player player = new Player(connection.getID(), new Vector2f(0,0));
+        for (Player  p : playState.players.values()){
+            connection.sendTCP(NewPlayerPacket.make(p.connection_id));
+            server.sendToTCP(p.connection_id, NewPlayerPacket.make(connection.getID()));
+        }
+
+        Player player = new Player(server, connection.getID(), new Vector2f(0,0));
         playState.addPlayer(player);
-        sendWorld();
-        server.sendToAllTCP(NewPlayerPacket.make(connection.getID()));
     }
 
     @Override
@@ -61,7 +60,10 @@ public class ClientManager extends Listener {
     @Override
     public void received(Connection connection, Object object){
         if (object instanceof PlayerActionPacket){
-            if (((PlayerActionPacket) object).action == PlayerActionPacket.Action.START_WALKING){
+            if (((PlayerActionPacket) object).action == PlayerActionPacket.Action.READY){
+                playState.playerReady(connection.getID());
+            }
+            else if (((PlayerActionPacket) object).action == PlayerActionPacket.Action.START_WALKING){
                 playState.startMovingPlayer(connection.getID(), ((PlayerActionPacket) object).velocity);
             }
             else if (((PlayerActionPacket) object).action  == PlayerActionPacket.Action.STOP_WALKING){

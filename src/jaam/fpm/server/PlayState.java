@@ -1,5 +1,6 @@
 package jaam.fpm.server;
 
+import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -14,6 +15,7 @@ public class PlayState {
     public boolean running;
     public int ticks;
 
+    public boolean drawingMode;
     public Tile[][] world;
     public HashMap<Integer, Player> players;
 
@@ -21,6 +23,7 @@ public class PlayState {
         running = false;
         ticks = 0;
 
+        drawingMode = true;
         world = MapGenerator.generate(100,100);
         players = new HashMap<>();
     }
@@ -45,14 +48,44 @@ public class PlayState {
     }
 
     private boolean update(double delta){
-        for (Player  p : players.values()){
-            p.update(delta);
+        if (!drawingMode){
+            for (Player  p : players.values()){
+                p.update(delta);
+            }
         }
+        else {
+            boolean allReady = true;
+            int playerCount = 0;
+            for (Player  p : players.values()){
+                if (!p.ready) allReady = false;
+                playerCount++;
+            }
+            if (allReady && playerCount > 1){
+                startGame();
+            }
+        }
+
         return true;
+    }
+
+    public void startGame(){
+        System.out.println("All players ready, starting game.");
+
+        this.drawingMode = false;
+
+        TileArrayPacket tileArrayPacket = TileArrayPacket.make(this.world);
+        for (Player  p : players.values()){
+            p.sendWorld(tileArrayPacket);
+        }
+
     }
 
     public void addPlayer(Player player){
         players.put(player.connection_id, player);
+    }
+
+    public void playerReady(int player_id){
+        players.get(player_id).ready = true;
     }
 
     public void startMovingPlayer(int player_id, Vector2f velocity){

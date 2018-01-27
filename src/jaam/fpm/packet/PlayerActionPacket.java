@@ -15,7 +15,7 @@ public class PlayerActionPacket {
     }
 
     public enum Action {
-        DISCONNECT,
+        READY,
 
         START_WALKING,
         STOP_WALKING
