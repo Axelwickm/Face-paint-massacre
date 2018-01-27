@@ -41,8 +41,8 @@ public class Drawing extends Image {
         currentColorIndex = 0;
 
         setFilter(FILTER_NEAREST);
-        //getGraphics().fillOval(0, 0, DRAWING_WIDTH, DRAWING_HEIGHT);
         Graphics g = comparison.getGraphics();
+        g.setColor(new Color(130, 76, 35, 255));
         g.fillOval(0, 0, DRAWING_WIDTH, DRAWING_HEIGHT);
         g.flush();
     }
