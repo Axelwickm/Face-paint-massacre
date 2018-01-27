@@ -106,9 +106,10 @@ public class PlayState {
         Tile[][] world = MapGenerator.generate(playerCount);
         float[][] positions = MapGenerator.getFreePosition();
 
-        TileArrayPacket tileArrayPacket = TileArrayPacket.make(world, positions);
+        int i = 0;
         for (Player  p : players.values()){
-            p.sendWorld(tileArrayPacket);
+            p.sendWorld(TileArrayPacket.make(world, positions[i]));
+            i++;
         }
 
     }
