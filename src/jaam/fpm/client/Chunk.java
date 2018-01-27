@@ -52,4 +52,8 @@ public class Chunk {
 	public void render() {
 		image.draw(x * Chunk.PIXELS, y * Chunk.PIXELS);
 	}
+
+	public Tile getTile(int tx, int ty) {
+		return tiles[ty][tx];
+	}
 }

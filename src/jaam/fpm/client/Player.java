@@ -1,5 +1,6 @@
 package jaam.fpm.client;
 
+import jaam.fpm.shared.Tile;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -8,7 +9,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 public class Player implements KeyListener {
 
-	public static final int SIZE = 10;
+	public static final int SIZE = 32;
 
 	public static final float DEFAULT_SPEED = .3f;
 
@@ -19,8 +20,13 @@ public class Player implements KeyListener {
 
 	private float speed = DEFAULT_SPEED;
 
-	public Player() {
+	private World world;
 
+	public Player(World world) {
+		this.world = world;
+
+		position.x = 100;
+		position.y = 100;
 	}
 
 	@Override public void inputStarted() { }
@@ -60,11 +66,25 @@ public class Player implements KeyListener {
 	public void update(final GameContainer gameContainer, final int dt) {
 
 		// Move
-		position.add(dir.copy().normalise().scale(speed * dt));
+		if (dir.lengthSquared() != 0) {
+			Vector2f newPos = position.copy().add(dir.copy().normalise().scale(speed * dt));
+
+			if (world.getTileFromWorldPosition(new Vector2f(newPos.x + dir.x * (SIZE / 2), position.y)).SOLID) {
+				newPos.x += (dir.x < 0 ? Tile.PIXELS - ((newPos.x + dir.x * (SIZE / 2)) % Tile.PIXELS)
+									   : -(((newPos.x + dir.x * (SIZE / 2)) % Tile.PIXELS)));
+			}
+
+			if (world.getTileFromWorldPosition(new Vector2f(position.x, newPos.y + dir.y * (SIZE / 2))).SOLID) {
+				newPos.y += (dir.y < 0 ? Tile.PIXELS - ((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS)
+									   : -(((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS)));
+			}
+
+			position.set(newPos);
+		}
 	}
 
 	public void render(final Graphics g) {
-		g.fillRect(position.x, position.y, SIZE, SIZE);
+		g.fillRect(position.x - SIZE / 2, position.y - SIZE / 2, SIZE, SIZE);
 	}
 
 	public int getChunkX() {

@@ -5,6 +5,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 
 public class World {
 
@@ -19,7 +20,7 @@ public class World {
 	private Image background;
 
 	public World() {
-		player = new Player();
+		player = new Player(this);
 		camera = new Camera();
 
 		// TODO: REMOVE
@@ -68,6 +69,20 @@ public class World {
 		}
 
 		player.render(g);
+	}
+
+	public Tile getTile(int cx, int cy, int tx, int ty) {
+		return chunks[cy][cx].getTile(tx, ty);
+	}
+
+	public Tile getTileFromWorldPosition(Vector2f pos) {
+		if (pos.x < 0 || pos.y < 0 || pos.x > (tilesX - 1) * Tile.PIXELS || pos.y > (tilesY - 1) * Tile.PIXELS)
+			return Tile.WALL;
+
+		return getTile(Math.floorDiv((int) pos.x, Chunk.PIXELS),
+					   Math.floorDiv((int) pos.y, Chunk.PIXELS),
+					   (int) (pos.x % Chunk.PIXELS) / Tile.PIXELS,
+					   (int) (pos.y % Chunk.PIXELS) / Tile.PIXELS);
 	}
 
 	private boolean renderChunk(final int x, final int y) {

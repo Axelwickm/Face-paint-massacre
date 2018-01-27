@@ -4,6 +4,8 @@ import org.newdawn.slick.Input;
 
 public class KeyConfig {
 
+	public static final int EXIT = Input.KEY_ESCAPE;
+
 	public static final int WALK_UP = Input.KEY_W;
 	public static final int WALK_DOWN = Input.KEY_S;
 	public static final int WALK_LEFT = Input.KEY_A;

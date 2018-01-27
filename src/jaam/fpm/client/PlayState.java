@@ -35,6 +35,10 @@ public class PlayState extends BasicGame
 		}
 
 		if (currentDrawing != null) currentDrawing.update(gameContainer, dt);
+
+		// Exit
+		if (input.isKeyPressed(KeyConfig.EXIT))
+			LaunchClient.exit();
 	}
 
 	@Override
