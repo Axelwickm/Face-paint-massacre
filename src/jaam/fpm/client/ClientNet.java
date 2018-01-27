@@ -6,6 +6,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import jaam.fpm.packet.NewPlayerPacket;
 import jaam.fpm.packet.PlayerActionPacket;
+import jaam.fpm.packet.SetFacePacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.Image;
@@ -61,6 +62,24 @@ public class ClientNet {
                     world.addPlayer(((NewPlayerPacket) object).connection_id, new Player(world, false));
                 }
                 else if (object instanceof PlayerActionPacket){ // Action from other player
+                    PlayerActionPacket packet = (PlayerActionPacket) object;
+                    switch (packet.action) {
+                        case READY:
+                            // Do we care?
+                            world.getPlayer(packet.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
+                            break;
+                        case START_WALKING:
+                            // TODO: Someone else's problem.
+                            break;
+                        case STOP_WALKING:
+                            // TODO: Someone else's problem.
+                            break;
+                        case POST_NOTE:
+                            // TODO: Figure out how to display notes.
+                            break;
+                        default:
+                            throw new UnsupportedOperationException("Can't handle PlayerActionPacket with action " + packet.action.name());
+                    }
 
                 }
             }
