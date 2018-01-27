@@ -5,6 +5,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import jaam.fpm.packet.PlayerActionPacket;
+import jaam.fpm.packet.TileArrayPacket;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class ClientManager extends Listener {
         Server server = new Server();
         Kryo kryo = server.getKryo();
         kryo.register(PlayerActionPacket.class);
+        kryo.register(TileArrayPacket.class);
 
         new Thread(server).start();
 
