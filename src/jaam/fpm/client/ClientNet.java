@@ -12,8 +12,9 @@ import jaam.fpm.shared.Tile;
 import java.io.IOException;
 
 public class ClientNet {
+    public Client client;
     public ClientNet() {
-        Client client = new Client();
+        this.client = new Client();
         Kryo kryo = client.getKryo();
         kryo.register(NewPlayerPacket.class);
         kryo.register(PlayerActionPacket.class);

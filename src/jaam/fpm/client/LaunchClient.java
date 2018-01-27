@@ -12,10 +12,9 @@ public class LaunchClient {
 
 	public static void main(String[] args) {
 		ClientNet clientNet = new ClientNet();
-
-
-		try {
-			appgc = new AppGameContainer(new PlayState("Simple Slick Game"));
+		try
+		{
+			appgc = new AppGameContainer(new PlayState("Simple Slick Game", clientNet.client));
 			appgc.setDisplayMode(Settings.SCREEN_WIDTH, Settings.SCREEN_HEIGHT, false);
 			appgc.start();
 		}

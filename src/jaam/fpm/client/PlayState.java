@@ -1,18 +1,21 @@
 package jaam.fpm.client;
 
+import com.esotericsoftware.kryonet.Client;
 import jaam.fpm.client.Drawing;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
 public class PlayState extends BasicGame
 {
+	private Client client;
 	private World world;
 	private Drawing currentDrawing;
 
 	private Image lastImage;
 
-	public PlayState(String name) {
+	public PlayState(String name, Client client) {
 		super(name);
+		this.client = client;
 	}
 
 	@Override
@@ -55,5 +58,9 @@ public class PlayState extends BasicGame
 
 			currentDrawing.render(gameContainer, graphics, dx, dy);
 		}
+	}
+
+	public Client getClient() {
+		return this.client;
 	}
 }
