@@ -3,6 +3,7 @@ package jaam.fpm.client;
 import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.shared.State;
 import jaam.fpm.shared.Tile;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -66,6 +67,11 @@ public class Player implements KeyListener {
 		if (pressed) {
 			sendWalkPacket();
 		}
+
+		if (key == KeyConfig.TOGGLE_WEAPON)
+			weapon.toggle();
+		if (key == KeyConfig.USE_WEAPON)
+			weapon.use();
 	}
 
 	@Override
@@ -134,11 +140,17 @@ public class Player implements KeyListener {
 
 			position.set(newPos);
 		}
+
+		weapon.update(dt);
 	}
 
 	public void render(final Graphics g) {
-		g.fillRect(position.x - SIZE / 2, position.y - SIZE / 2, SIZE, SIZE);
-		//weapon.render(g);
+		g.pushTransform();
+		g.setColor(Color.white);
+		g.translate(position.x, position.y);
+		g.fillRect(- SIZE / 2, - SIZE / 2, SIZE, SIZE);
+		weapon.render(g);
+		g.popTransform();
 	}
 
 	public int getChunkX() {

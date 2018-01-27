@@ -10,6 +10,8 @@ public class KeyConfig {
 	public static final int WALK_DOWN = Input.KEY_S;
 	public static final int WALK_LEFT = Input.KEY_A;
 	public static final int WALK_RIGHT = Input.KEY_D;
+	public static final int TOGGLE_WEAPON = Input.KEY_E;
+	public static final int USE_WEAPON = Input.KEY_SPACE;
 
 	public static final int NEXT_COLOR = Input.KEY_Q;
 	public static final int PREV_COLOR = Input.KEY_E;
