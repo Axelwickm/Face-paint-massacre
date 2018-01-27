@@ -31,6 +31,7 @@ public class ClientManager extends Listener {
         kryo.register(Tile.class);
         kryo.register(Tile[].class);
         kryo.register(Tile[][].class);
+        kryo.register(float[].class);
 
         kryo.register(org.newdawn.slick.geom.Vector2f.class);
 
@@ -93,7 +94,8 @@ public class ClientManager extends Listener {
 
                     break;
                 case START_WALKING:
-                    playState.startMovingPlayer(connection.getID(), ((PlayerActionPacket) object).velocity);
+                    playState.startMovingPlayer(connection.getID(), new Vector2f(((PlayerActionPacket) object).velocity[0],
+																				 ((PlayerActionPacket) object).velocity[1]));
                     break;
                 case STOP_WALKING:
                     playState.stopMovingPlayer(connection.getID());

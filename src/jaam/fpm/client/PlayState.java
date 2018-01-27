@@ -29,7 +29,7 @@ public class PlayState extends BasicGame
 	@Override
 	public void init(final GameContainer gameContainer) throws SlickException {
 		System.out.println("Init game");
-		world = new World();
+		world = new World(client);
 		LaunchClient.getClientNet().world = world;
 		world.init(gameContainer);
 		currentDrawing = new Drawing();

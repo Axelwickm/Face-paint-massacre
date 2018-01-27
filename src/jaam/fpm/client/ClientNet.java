@@ -8,6 +8,8 @@ import jaam.fpm.packet.NewPlayerPacket;
 import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.io.IOException;
 
@@ -27,6 +29,7 @@ public class ClientNet {
         kryo.register(Tile.class);
         kryo.register(Tile[].class);
         kryo.register(Tile[][].class);
+        kryo.register(float[].class);
 
         kryo.register(org.newdawn.slick.geom.Vector2f.class);
 
@@ -62,23 +65,24 @@ public class ClientNet {
                     world.addPlayer(((NewPlayerPacket) object).connection_id, new Player(world, false));
                 }
                 else if (object instanceof PlayerActionPacket){ // Action from other player
-                    PlayerActionPacket packet = (PlayerActionPacket) object;
-                    switch (packet.action) {
+                    PlayerActionPacket p = (PlayerActionPacket) object;
+                    switch (p.action) {
                         case READY:
                             // Do we care?
-                            world.getPlayer(packet.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
+                            world.getPlayer(p.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
                             break;
                         case START_WALKING:
-                            // TODO: Someone else's problem.
+							world.getOthers().get(p.connection_id).setDir(new Vector2f(p.velocity[0], p.velocity[1]));
                             break;
                         case STOP_WALKING:
-                            // TODO: Someone else's problem.
+							world.getOthers().get(p.connection_id).setDir(new Vector2f());
+							world.getOthers().get(p.connection_id).setPosition(new Vector2f(p.stopPosition[0], p.stopPosition[1]));
                             break;
                         case POST_NOTE:
                             // TODO: Figure out how to display notes.
                             break;
                         default:
-                            throw new UnsupportedOperationException("Can't handle PlayerActionPacket with action " + packet.action.name());
+                            throw new UnsupportedOperationException("Can't handle PlayerActionPacket with action " + p.action.name());
                     }
 
                 }
@@ -86,7 +90,7 @@ public class ClientNet {
         });
 
         try {
-            client.connect(5000, "127.0.0.1", 54555, 54777);
+            client.connect(5000, "10.251.14.129", 54555, 54777);
         } catch (IOException e) {
             e.printStackTrace();
         }

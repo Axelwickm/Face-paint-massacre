@@ -1,5 +1,6 @@
 package jaam.fpm.client;
 
+import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -40,27 +41,52 @@ public class Player implements KeyListener {
 
 	@Override
 	public void keyPressed(final int key, final char c) {
+		boolean pressed = false;
+
 		if (key == KeyConfig.WALK_UP) {
 			dir.y -= 1;
+			pressed = true;
 		} else if (key == KeyConfig.WALK_DOWN) {
 			dir.y += 1;
+			pressed = true;
 		} else if (key == KeyConfig.WALK_LEFT) {
 			dir.x -= 1;
+			pressed = true;
 		} else if (key == KeyConfig.WALK_RIGHT) {
 			dir.x += 1;
+			pressed = true;
+		}
+
+		if (pressed) {
+			sendWalkPacket();
 		}
 	}
 
 	@Override
 	public void keyReleased(final int key, final char c) {
+
+		boolean released = false;
+
 		if (key == KeyConfig.WALK_UP) {
 			dir.y += 1;
+			released = true;
 		} else if (key == KeyConfig.WALK_DOWN) {
 			dir.y -= 1;
+			released = true;
 		} else if (key == KeyConfig.WALK_LEFT) {
 			dir.x += 1;
+			released = true;
 		} else if (key == KeyConfig.WALK_RIGHT) {
 			dir.x -= 1;
+			released = true;
+		}
+
+		if (released) {
+			if (dir.lengthSquared() == 0) {
+				sendStopPacket();
+			} else {
+				sendWalkPacket();
+			}
 		}
 	}
 
@@ -90,6 +116,7 @@ public class Player implements KeyListener {
 					world.getTileFromWorldPosition(new Vector2f(position.x + (SIZE / 2),
 																newPos.y + dir.y * (SIZE / 2))).SOLID) {
 
+				System.out.println(Tile.PIXELS - ((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS));
 				newPos.y += (dir.y < 0 ? Tile.PIXELS - ((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS)
 									   : -(((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS)));
 			}
@@ -132,5 +159,21 @@ public class Player implements KeyListener {
 
 	public void setSpeed(final float speed) {
 		this.speed = speed;
+	}
+
+	public void sendWalkPacket() {
+		PlayerActionPacket p = PlayerActionPacket.make(PlayerActionPacket.Action.START_WALKING);
+
+		p.velocity = new float[] {dir.x, dir.y};
+
+		world.getClient().sendTCP(p);
+	}
+
+	public void sendStopPacket() {
+		PlayerActionPacket p = PlayerActionPacket.make(PlayerActionPacket.Action.STOP_WALKING);
+
+		p.stopPosition = new float[] {position.x, position.y};
+
+		world.getClient().sendTCP(p);
 	}
 }
