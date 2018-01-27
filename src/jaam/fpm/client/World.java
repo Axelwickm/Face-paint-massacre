@@ -5,6 +5,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 
 public class World {
 
@@ -37,6 +38,10 @@ public class World {
 		}
 
 		createChunks(Chunk.SIZE * t_cx, Chunk.SIZE * t_cy, t_tiles);
+	}
+
+	public Vector2f getCameraPosition() {
+		return camera.getPosition();
 	}
 
 	public void init(final GameContainer gc) {

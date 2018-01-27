@@ -13,8 +13,8 @@ import java.util.logging.Level;
 
 public class Drawing extends ImageBuffer {
 
-    public static final int DRAWING_WIDTH = 100;
-    public static final int DRAWING_HEIGHT = 200;
+    public static final int DRAWING_WIDTH = 32;
+    public static final int DRAWING_HEIGHT = 32;
 
     public static final int MINIMUM_BRUSH_SIZE = 0;
     public static final int MAXIMUM_BRUSH_SIZE = 9;
@@ -97,22 +97,21 @@ public class Drawing extends ImageBuffer {
         }
     }
 
+    public void render(final GameContainer gc, final Graphics g, final int translateX, final int translateY) {
+		float wscale = gc.getWidth() / (float)getWidth();
+		float hscale = gc.getHeight() / (float)getHeight();
+		float scale = Math.min(wscale, hscale);
 
-    public void render(GameContainer gc, Graphics g) throws SlickException
-    {
-        float wscale = gc.getWidth() / (float)getWidth();
-        float hscale = gc.getHeight() / (float)getHeight();
-        float scale = Math.min(wscale, hscale);
+		int xpos = (gc.getWidth() - (int)(scale * getWidth())) / 2;
+		int ypos = (gc.getHeight() - (int)(scale * getHeight())) / 2;
 
-        int xpos = (gc.getWidth() - (int)(scale * getWidth())) / 2;
-        int ypos = (gc.getHeight() - (int)(scale * getHeight())) / 2;
+		getImage().draw(xpos + translateX, ypos + translateY, scale);
 
-        getImage().draw(xpos, ypos, scale);
-
-        g.drawString("Brush size: " + brushSize, 10, 30);
-        g.drawString("Color: " + COLORS[currentColorIndex].toString(), 10, 50);
-        g.drawString("Eraser: " + (isErasing ? "Active" : "Inactive"), 10, 70);
-    }
+		g.drawString("Brush size: " + brushSize + " (Z and X to change)", 10 + translateX, 30 + translateY);
+		g.drawString("Color: " + COLORS[currentColorIndex].toString() + " (Q and E to change)", 10 + translateX, 50 + translateY);
+		g.drawString("Eraser: " + (isErasing ? "Active" : "Inactive") + " (press W to toggle)", 10 + translateX, 70 + translateY);
+		g.drawString("Press R to finish drawing", 10 + translateX, 90 + translateY);
+	}
 
     public boolean isMouseWithinDrawing(GameContainer gc) {
         Input input = gc.getInput();

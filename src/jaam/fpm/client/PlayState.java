@@ -2,6 +2,7 @@ package jaam.fpm.client;
 
 import jaam.fpm.client.Drawing;
 import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Vector2f;
 
 public class PlayState extends BasicGame
 {
@@ -40,6 +41,15 @@ public class PlayState extends BasicGame
 	@Override
 	public void render(final GameContainer gameContainer, final Graphics graphics) throws SlickException {
 		world.render(graphics);
-		//if (currentDrawing != null) currentDrawing.render(gameContainer, graphics);
+
+		if (currentDrawing != null) {
+			Vector2f cameraPos = world.getCameraPosition();
+
+			int dx = (int)((cameraPos.x - Settings.SCREEN_WIDTH / 2));
+			int dy = (int)((cameraPos.y - Settings.SCREEN_HEIGHT / 2));
+			currentDrawing.render(gameContainer, graphics, dx, dy);
+
+			currentDrawing.render(gameContainer, graphics, dx, dy);
+		}
 	}
 }
