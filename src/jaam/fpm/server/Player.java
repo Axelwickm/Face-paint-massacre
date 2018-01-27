@@ -14,6 +14,8 @@ public class Player {
     private Vector2f velocity = new Vector2f();
     private boolean dead;
 
+    private PlayerRole role = PlayerRole.REGULAR;
+
     private byte[] face = null;
 	public byte[] getFace() {
 		return face;
@@ -57,3 +59,4 @@ public class Player {
         server.sendToTCP(connection_id, world);
     }
 }
+

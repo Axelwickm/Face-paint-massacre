@@ -2,10 +2,7 @@ package jaam.fpm.client;
 
 import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.shared.Tile;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.KeyListener;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Player implements KeyListener {
@@ -24,6 +21,16 @@ public class Player implements KeyListener {
 	private World world;
 
 	private boolean controllable;
+
+	private Image face;
+
+	public Image getFace() {
+		return face;
+	}
+
+	public void setFace(Image face) {
+		this.face = face;
+	}
 
 	public Player(World world) {
 		this(world, true);

@@ -9,8 +9,10 @@ import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class ClientNet {
@@ -69,7 +71,13 @@ public class ClientNet {
                     switch (p.action) {
                         case READY:
                             // Do we care?
-                            world.getPlayer(p.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
+							Player pl = world.getPlayer(p.connection_id);
+							try {
+								pl.setFace(new Image(new ByteArrayInputStream(p.drawing), null, false, Image.FILTER_NEAREST));
+							} catch (SlickException ex) {
+								throw new RuntimeException("Something went wrong when creating an image from a byte array.", ex);
+							}
+
                             break;
                         case START_WALKING:
 							world.getOthers().get(p.connection_id).setDir(new Vector2f(p.velocity[0], p.velocity[1]));
