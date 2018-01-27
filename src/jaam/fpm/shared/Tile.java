@@ -3,6 +3,8 @@ package jaam.fpm.shared;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import java.util.HashMap;
+
 public enum Tile {
 
 	FLOOR(false), WALL(true);
@@ -16,15 +18,15 @@ public enum Tile {
 	}
 
 	public Image loadImage() {
-		try {
-			switch(this) {
-				case FLOOR:   return new Image("res/texture/floor.png");
-				case WALL:    return new Image("res/texture/wall.png");
-			}
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		return images.get(this);
+	}
 
-		return null;
+	public static HashMap<Tile, Image> images = new HashMap<>();
+
+	public static void loadImages() {
+		try {
+			images.put(FLOOR, new Image("res/texture/floor.png"));
+			images.put(WALL, new Image("res/texture/wall.png"));
+		} catch (SlickException e) { e.printStackTrace(); }
 	}
 }

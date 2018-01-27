@@ -34,6 +34,8 @@ public class ClientNet {
         kryo.register(org.newdawn.slick.geom.Vector2f.class);
 
         kryo.register(byte[].class);
+        kryo.register(float[].class);
+        kryo.register(float[][].class);
 
         client.start();
 
@@ -63,16 +65,25 @@ public class ClientNet {
                     world.addPlayer(((NewPlayerPacket) object).connection_id, new Player(world, false));
                 }
                 else if (object instanceof PlayerActionPacket){ // Action from other player
-					PlayerActionPacket p = (PlayerActionPacket) object;
-					switch(p.action) {
-						case START_WALKING:
+                    PlayerActionPacket p = (PlayerActionPacket) object;
+                    switch (p.action) {
+                        case READY:
+                            // Do we care?
+                            world.getPlayer(p.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
+                            break;
+                        case START_WALKING:
 							world.getOthers().get(p.connection_id).setDir(new Vector2f(p.velocity[0], p.velocity[1]));
-							break;
-						case STOP_WALKING:
+                            break;
+                        case STOP_WALKING:
 							world.getOthers().get(p.connection_id).setDir(new Vector2f());
 							world.getOthers().get(p.connection_id).setPosition(new Vector2f(p.stopPosition[0], p.stopPosition[1]));
-							break;
-					}
+                            break;
+                        case POST_NOTE:
+                            // TODO: Figure out how to display notes.
+                            break;
+                        default:
+                            throw new UnsupportedOperationException("Can't handle PlayerActionPacket with action " + p.action.name());
+                    }
 
                 }
             }
