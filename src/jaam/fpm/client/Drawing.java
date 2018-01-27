@@ -111,9 +111,15 @@ public class Drawing extends Image {
 	}
 
     public boolean isPointWithinDrawing(GameContainer gc, Point pt) throws SlickException {
+    	if (pt.x < 0 || pt.x >= comparison.getWidth()) return false;
+    	if (pt.y < 0 || pt.y >= comparison.getHeight()) return false;
     	Color c = comparison.getGraphics().getPixel(pt.x, pt.y);
+
     	int alpha = c.getAlphaByte();
-    	return alpha != 0;
+
+		comparison.getGraphics().flush();
+
+		return alpha != 0;
     }
 
     public Point getMouseLocationInImage(GameContainer gc) throws IllegalArgumentException {
