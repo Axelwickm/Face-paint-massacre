@@ -18,7 +18,5 @@ public class KeyConfig {
 	public static final int BIGGER_BRUSH = Input.KEY_Z;
 	public static final int SMALLER_BRUSH = Input.KEY_X;
 
-	public static final int TOGGLE_ERASE = Input.KEY_W;
-
 	private KeyConfig() { }
 }
