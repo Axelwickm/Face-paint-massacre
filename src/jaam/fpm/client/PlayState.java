@@ -43,47 +43,42 @@ public class PlayState extends BasicGame
 			currentDrawing.update(gameContainer, dt);
 		}
 
-		if (facepaintMode) {
-			if (currentDrawing != null && input.isKeyPressed(KeyConfig.STOP_DRAWING)) {
-				lastImage = currentDrawing;
-				currentDrawing = null;
-				PlayerActionPacket p = PlayerActionPacket.make(PlayerActionPacket.Action.READY);
 
-				byte[] array = new byte[Drawing.DRAWING_WIDTH * Drawing.DRAWING_HEIGHT * 4];
-				ByteBuffer bb = ByteBuffer.allocateDirect(Drawing.DRAWING_WIDTH * Drawing.DRAWING_HEIGHT * 4);
-				lastImage.getGraphics().getArea(0, 0, Drawing.DRAWING_WIDTH, Drawing.DRAWING_HEIGHT, bb);
+		if (currentDrawing != null && input.isKeyPressed(KeyConfig.STOP_DRAWING)) {
+			lastImage = currentDrawing;
+			currentDrawing = null;
 
-				bb.position(0);
-				Graphics g = lastImage.getGraphics();
+			PlayerActionPacket packet;
 
-				for (int y = 0; y < Drawing.DRAWING_HEIGHT; ++y) {
-					for (int x = 0; x < Drawing.DRAWING_WIDTH; ++x) {
-
-					}
-				}
-
-				bb.get(array, 0, array.length);
-
-				int numNonzeroBytes = 0;
-				for (int i = 0; i < array.length; i++) {
-					if (array[i] != 0) numNonzeroBytes++;
-				}
-				Logger.getGlobal().severe("Nonzero bytes in image: " + numNonzeroBytes);
-
-				p.drawing = array;
-
-				//p.drawing = lastImage;
-
-				client.sendTCP(p);
-
-				facepaintMode = false;
+			if (facepaintMode) {
+				// Send a READY PA-packet and exit facepaint mode
+				packet = PlayerActionPacket.make(PlayerActionPacket.Action.READY);
+			} else {
+				packet = PlayerActionPacket.make(PlayerActionPacket.Action.POST_NOTE);
 			}
-		} else {
-			world.update(gameContainer, dt);
+			packet.drawing = exportImageData(lastImage);
+			client.sendTCP(packet);
+			if (facepaintMode) facepaintMode = false;
+
 		}
+		if (!facepaintMode) world.update(gameContainer, dt);
+
 		// Exit
 		if (input.isKeyPressed(KeyConfig.EXIT))
 			LaunchClient.exit();
+	}
+
+	public static final byte[] exportImageData(Image img) throws SlickException {
+		byte[] array = new byte[Drawing.DRAWING_WIDTH * Drawing.DRAWING_HEIGHT * 4];
+		ByteBuffer bb = ByteBuffer.allocateDirect(Drawing.DRAWING_WIDTH * Drawing.DRAWING_HEIGHT * 4);
+		img.getGraphics().getArea(0, 0, Drawing.DRAWING_WIDTH, Drawing.DRAWING_HEIGHT, bb);
+
+		bb.position(0);
+		Graphics g = img.getGraphics();
+
+		bb.get(array, 0, array.length);
+
+		return array;
 	}
 
 	@Override
