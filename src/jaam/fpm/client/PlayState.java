@@ -10,13 +10,12 @@ public class PlayState extends BasicGame
 
 	public PlayState(String name) {
 		super(name);
-
-		world = new World();
 	}
 
 	@Override
 	public void init(final GameContainer gameContainer) throws SlickException {
 		System.out.println("Init game");
+		world = new World();
 	}
 
 	@Override
@@ -24,19 +23,19 @@ public class PlayState extends BasicGame
 
 		world.update(dt);
 
-		Input input = gameContainer.getInput();
+		/*Input input = gameContainer.getInput();
 		if (currentDrawing == null && input.isKeyPressed(KeyConfig.KEYCODE_START_DRAWING)) {
 			currentDrawing = new Drawing();
 		} else if (currentDrawing != null && input.isKeyPressed(KeyConfig.KEYCODE_STOP_DRAWING)) {
 			currentDrawing = null;
 		}
 
-		if (currentDrawing != null) currentDrawing.update(gameContainer, dt);
+		if (currentDrawing != null) currentDrawing.update(gameContainer, dt);*/
 	}
 
 	@Override
 	public void render(final GameContainer gameContainer, final Graphics graphics) throws SlickException {
 		world.render(graphics);
-		if (currentDrawing != null) currentDrawing.render(gameContainer, graphics);
+		//if (currentDrawing != null) currentDrawing.render(gameContainer, graphics);
 	}
 }
