@@ -41,7 +41,7 @@ public class Drawing extends Image {
         currentColorIndex = 0;
 
         setFilter(FILTER_NEAREST);
-        getGraphics().fillOval(0, 0, DRAWING_WIDTH, DRAWING_HEIGHT);
+        //getGraphics().fillOval(0, 0, DRAWING_WIDTH, DRAWING_HEIGHT);
         Graphics g = comparison.getGraphics();
         g.fillOval(0, 0, DRAWING_WIDTH, DRAWING_HEIGHT);
         g.flush();
@@ -56,6 +56,7 @@ public class Drawing extends Image {
     int currentColorIndex;
 
 
+    boolean dangerZone = false;
     public void update(GameContainer gc, int i) throws SlickException {
         if (!isActive) {
         	return;
@@ -65,21 +66,30 @@ public class Drawing extends Image {
         Input input = gc.getInput();
         g.setColor(COLORS[currentColorIndex]);
 
+        //boolean paintedAnywhere = false;
         if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
-        	Point pt = getMouseLocationInImage(gc);
+			Point pt = getMouseLocationInImage(gc);
+
         	for (int dx = -brushSize; dx <= brushSize; ++dx) {
-				if (pt.x + dx < 0) continue;
-				if (pt.x + dx >= getWidth()) break;
+				//if (pt.x + dx < 0) continue;
+				//if (pt.x + dx >= getWidth()) break;
 				for (int dy = -brushSize; dy <= brushSize; ++dy) {
-					if (pt.y + dy < 0) continue;
-					if (pt.y + dy >= getHeight()) break;
+					//if (pt.y + dy < 0) continue;
+					//if (pt.y + dy >= getHeight()) break;
 					if (!isPointWithinDrawing(gc, new Point(pt.x + dx, pt.y + dy))) continue;
 
 					g.fillRect(pt.x + dx, pt.y + dy, 1, 1);
 				}
 			}
 
+			// Let's try this instead, just to see what happens
+			/*if (isPointWithinDrawing(gc, new Point(pt.x, pt.y))) {
+				g.fillRect(pt.x - brushSize, pt.y - brushSize, 1 + 2 * brushSize, 1 + 2 * brushSize);
+				//paintedAnywhere = true;
+			}*/
         }
+
+
         g.flush();
 
         if (input.isKeyPressed(KeyConfig.NEXT_COLOR)) {
@@ -103,6 +113,7 @@ public class Drawing extends Image {
 		int xpos = (gc.getWidth() - (int)(scale * getWidth())) / 2;
 		int ypos = (gc.getHeight() - (int)(scale * getHeight())) / 2;
 
+		comparison.draw(xpos + translateX, ypos + translateY, scale);
 		draw(xpos + translateX, ypos + translateY, scale);
 
 		g.drawString("Brush size: " + brushSize + " (Z and X to change)", 10 + translateX, 30 + translateY);
