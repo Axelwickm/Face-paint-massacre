@@ -6,10 +6,8 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import jaam.fpm.packet.NewPlayerPacket;
 import jaam.fpm.packet.PlayerActionPacket;
-import jaam.fpm.packet.SetFacePacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
-import org.newdawn.slick.Image;
 
 import java.io.IOException;
 
