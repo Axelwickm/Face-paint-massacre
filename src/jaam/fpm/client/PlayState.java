@@ -1,12 +1,14 @@
 package jaam.fpm.client;
 
-import jaam.fpm.Drawing;
+import jaam.fpm.client.Drawing;
 import org.newdawn.slick.*;
 
 public class PlayState extends BasicGame
 {
 	private World world;
 	private Drawing currentDrawing;
+
+	private Image lastImage;
 
 	public PlayState(String name) {
 		super(name);
@@ -24,14 +26,15 @@ public class PlayState extends BasicGame
 
 		world.update(gameContainer, dt);
 
-		/*Input input = gameContainer.getInput();
-		if (currentDrawing == null && input.isKeyPressed(KeyConfig.KEYCODE_START_DRAWING)) {
+		Input input = gameContainer.getInput();
+		if (currentDrawing == null && input.isKeyPressed(KeyConfig.START_DRAWING)) {
 			currentDrawing = new Drawing();
-		} else if (currentDrawing != null && input.isKeyPressed(KeyConfig.KEYCODE_STOP_DRAWING)) {
+		} else if (currentDrawing != null && input.isKeyPressed(KeyConfig.STOP_DRAWING)) {
+			lastImage = currentDrawing.getImage();
 			currentDrawing = null;
 		}
 
-		if (currentDrawing != null) currentDrawing.update(gameContainer, dt);*/
+		if (currentDrawing != null) currentDrawing.update(gameContainer, dt);
 	}
 
 	@Override

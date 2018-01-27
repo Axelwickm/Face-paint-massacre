@@ -2,10 +2,8 @@ package jaam.fpm.client;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Player implements KeyListener {
@@ -29,26 +27,26 @@ public class Player implements KeyListener {
 
 	@Override
 	public void keyPressed(final int key, final char c) {
-		if (key == KeyConfig.KEYCODE_WALK_UP) {
+		if (key == KeyConfig.WALK_UP) {
 			dir.y -= 1;
-		} else if (key == KeyConfig.KEYCODE_WALK_DOWN) {
+		} else if (key == KeyConfig.WALK_DOWN) {
 			dir.y += 1;
-		} else if (key == KeyConfig.KEYCODE_WALK_LEFT) {
+		} else if (key == KeyConfig.WALK_LEFT) {
 			dir.x -= 1;
-		} else if (key == KeyConfig.KEYCODE_WALK_RIGHT) {
+		} else if (key == KeyConfig.WALK_RIGHT) {
 			dir.x += 1;
 		}
 	}
 
 	@Override
 	public void keyReleased(final int key, final char c) {
-		if (key == KeyConfig.KEYCODE_WALK_UP) {
+		if (key == KeyConfig.WALK_UP) {
 			dir.y += 1;
-		} else if (key == KeyConfig.KEYCODE_WALK_DOWN) {
+		} else if (key == KeyConfig.WALK_DOWN) {
 			dir.y -= 1;
-		} else if (key == KeyConfig.KEYCODE_WALK_LEFT) {
+		} else if (key == KeyConfig.WALK_LEFT) {
 			dir.x += 1;
-		} else if (key == KeyConfig.KEYCODE_WALK_RIGHT) {
+		} else if (key == KeyConfig.WALK_RIGHT) {
 			dir.x -= 1;
 		}
 	}
