@@ -100,11 +100,6 @@ public class ClientManager extends Listener {
                         // TODO: Actually, do we even want to do this?
                     }
 
-                    // Inform all other players
-                    for (Player pl : playState.players.values()) {
-                        server.sendToTCP(pl.connection_id, SetFacePacket.make(packet.drawing));
-                    }
-
                     break;
                 case START_WALKING:
                     playState.startMovingPlayer(connection.getID(), ((PlayerActionPacket) object).velocity);
@@ -119,7 +114,7 @@ public class ClientManager extends Listener {
                     throw new UnsupportedOperationException("Can't handle PlayerActionPacket with action: " + packet.action.name());
             }
 
-            ((PlayerActionPacket) object).connection_id = connection.getID();
+            packet.connection_id = connection.getID();
             server.sendToAllExceptTCP(connection.getID(), object);
         }
     }

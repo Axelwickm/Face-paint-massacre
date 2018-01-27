@@ -149,4 +149,5 @@ public class World {
 	public void addPlayer(int id, Player player) {
 		others.put(id, player);
 	}
+	public Player getPlayer(int id) { return others.get(id); }
 }
