@@ -12,9 +12,7 @@ public class Player implements KeyListener {
 
 	public static final int SIZE = 10;
 
-	public static final float DEFAULT_SPEED = 1.0f;
-
-	private Rectangle rect;
+	public static final float DEFAULT_SPEED = .3f;
 
 	private Vector2f position = new Vector2f();
 	private Vector2f dir =  new Vector2f();
@@ -22,7 +20,7 @@ public class Player implements KeyListener {
 	private float speed = DEFAULT_SPEED;
 
 	public Player() {
-		rect = new Rectangle(position.x, position.y, SIZE, SIZE);
+
 	}
 
 	@Override public void inputStarted() { }
@@ -30,9 +28,9 @@ public class Player implements KeyListener {
 	@Override
 	public void keyPressed(final int key, final char c) {
 		if (key == KeyConfig.KEYCODE_WALK_UP) {
-			dir.y += 1;
-		} else if (key == KeyConfig.KEYCODE_WALK_DOWN) {
 			dir.y -= 1;
+		} else if (key == KeyConfig.KEYCODE_WALK_DOWN) {
+			dir.y += 1;
 		} else if (key == KeyConfig.KEYCODE_WALK_LEFT) {
 			dir.x -= 1;
 		} else if (key == KeyConfig.KEYCODE_WALK_RIGHT) {
@@ -43,9 +41,9 @@ public class Player implements KeyListener {
 	@Override
 	public void keyReleased(final int key, final char c) {
 		if (key == KeyConfig.KEYCODE_WALK_UP) {
-			dir.y -= 1;
-		} else if (key == KeyConfig.KEYCODE_WALK_DOWN) {
 			dir.y += 1;
+		} else if (key == KeyConfig.KEYCODE_WALK_DOWN) {
+			dir.y -= 1;
 		} else if (key == KeyConfig.KEYCODE_WALK_LEFT) {
 			dir.x += 1;
 		} else if (key == KeyConfig.KEYCODE_WALK_RIGHT) {
@@ -60,11 +58,14 @@ public class Player implements KeyListener {
 	@Override public void inputEnded() { }
 
 	public void update(final GameContainer gameContainer, final int dt) {
-		
+
+		// Move
+		position.add(dir.copy().normalise().scale(speed * dt));
 	}
 
 	public void render(final Graphics g) {
 		g.translate(400, 300);
-		g.draw(rect);
+
+		g.fillRect(position.x, position.y, SIZE, SIZE);
 	}
 }
