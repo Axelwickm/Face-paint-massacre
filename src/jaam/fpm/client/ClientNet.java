@@ -52,8 +52,11 @@ public class ClientNet {
 					while (world == null) {}
 					world.createChunks(p.tilesX, p.tilesY, p.tiles);
                 }
-                else if (object instanceof NewPlayerPacket){
-                    System.out.println("Client id: "+((NewPlayerPacket) object).connection_id);
+                else if (object instanceof NewPlayerPacket){ // Other player added
+                    System.out.println("Connection id: "+((NewPlayerPacket) object).connection_id);
+                }
+                else if (object instanceof PlayerActionPacket){ // Action from other player
+
                 }
             }
         });
