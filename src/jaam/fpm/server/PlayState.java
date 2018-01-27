@@ -62,7 +62,7 @@ public class PlayState {
                 if (!p.ready) allReady = false;
                 playerCount++;
             }
-            if (allReady && playerCount > 1){
+            if (allReady && playerCount > 0){
                 startGame();
             }
         }
@@ -74,9 +74,10 @@ public class PlayState {
         System.out.println("All players ready, starting game.");
 
         this.drawingMode = false;
-        Tile[][] world = MapGenerator.generate(50);
+        Tile[][] world = MapGenerator.generate();
+        float[][] positions = MapGenerator.getFreePosition();
 
-        TileArrayPacket tileArrayPacket = TileArrayPacket.make(world);
+        TileArrayPacket tileArrayPacket = TileArrayPacket.make(world, positions);
         for (Player  p : players.values()){
             p.sendWorld(tileArrayPacket);
         }
