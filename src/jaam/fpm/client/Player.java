@@ -1,5 +1,6 @@
 package jaam.fpm.client;
 
+import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -40,14 +41,28 @@ public class Player implements KeyListener {
 
 	@Override
 	public void keyPressed(final int key, final char c) {
+		boolean pressed = false;
+
 		if (key == KeyConfig.WALK_UP) {
 			dir.y -= 1;
+			pressed = true;
 		} else if (key == KeyConfig.WALK_DOWN) {
 			dir.y += 1;
+			pressed = true;
 		} else if (key == KeyConfig.WALK_LEFT) {
 			dir.x -= 1;
+			pressed = true;
 		} else if (key == KeyConfig.WALK_RIGHT) {
 			dir.x += 1;
+			pressed = true;
+		}
+
+		if (pressed) {
+			PlayerActionPacket p = PlayerActionPacket.make(PlayerActionPacket.Action.START_WALKING);
+
+			p.velocity = new float[] {dir.x, dir.y};
+
+			world.getClient().sendTCP(p);
 		}
 	}
 
@@ -61,6 +76,14 @@ public class Player implements KeyListener {
 			dir.x += 1;
 		} else if (key == KeyConfig.WALK_RIGHT) {
 			dir.x -= 1;
+		}
+
+		if (dir.lengthSquared() == 0) {
+			PlayerActionPacket p = PlayerActionPacket.make(PlayerActionPacket.Action.STOP_WALKING);
+
+			p.stopPosition = new float[] {position.x, position.y};
+
+			world.getClient().sendTCP(p);
 		}
 	}
 
@@ -76,6 +99,11 @@ public class Player implements KeyListener {
 		if (dir.lengthSquared() != 0) {
 			Vector2f newPos = position.copy().add(dir.copy().normalise().scale(speed * dt));
 
+			if (!controllable) {
+				position.set(newPos);
+				return;
+			}
+
 			if (world.getTileFromWorldPosition(new Vector2f(newPos.x + dir.x * (SIZE / 2),
 															position.y - (SIZE / 2))).SOLID ||
 					world.getTileFromWorldPosition(new Vector2f(newPos.x + dir.x * (SIZE / 2),
@@ -90,6 +118,7 @@ public class Player implements KeyListener {
 					world.getTileFromWorldPosition(new Vector2f(position.x + (SIZE / 2),
 																newPos.y + dir.y * (SIZE / 2))).SOLID) {
 
+				System.out.println(Tile.PIXELS - ((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS));
 				newPos.y += (dir.y < 0 ? Tile.PIXELS - ((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS)
 									   : -(((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS)));
 			}

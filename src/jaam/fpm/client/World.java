@@ -1,5 +1,6 @@
 package jaam.fpm.client;
 
+import com.esotericsoftware.kryonet.Client;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.GameContainer;
@@ -29,7 +30,10 @@ public class World {
 
 	private volatile TileArrayPacket tileArrayPacket;
 
-	public World() {
+	private Client client;
+
+	public World(Client client) {
+		this.client = client;
 		player = new Player(this);
 		camera = new Camera();
 	}
@@ -59,6 +63,10 @@ public class World {
 			return;
 		}
 
+		for (Player p : others.values()) {
+			p.update(gc, dt);
+		}
+
 		player.update(gc, dt);
 
 		camera.update(player.getPosition(), dt);
@@ -77,6 +85,10 @@ public class World {
 				renderChunk(j - Player.VIEW_RADIUS + player.getChunkX(),
 							i - Player.VIEW_RADIUS + player.getChunkY());
 			}
+		}
+
+		for (Player p : others.values()) {
+			p.render(g);
 		}
 
 		player.render(g);
@@ -141,5 +153,13 @@ public class World {
 
 	public void addPlayer(int id, Player player) {
 		others.put(id, player);
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public HashMap<Integer, Player> getOthers() {
+		return others;
 	}
 }

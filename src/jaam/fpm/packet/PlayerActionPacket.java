@@ -6,8 +6,8 @@ import org.newdawn.slick.geom.Vector2f;
 public class PlayerActionPacket {
     public Action action;
     public int connection_id; // Who did it (like a player id)
-    public Vector2f velocity;
-    public Vector2f stopPosition;
+    public float[] velocity;
+    public float[] stopPosition;
 
     public byte[] drawing;
 

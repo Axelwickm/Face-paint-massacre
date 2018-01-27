@@ -29,7 +29,7 @@ public class PlayState extends BasicGame
 	@Override
 	public void init(final GameContainer gameContainer) throws SlickException {
 		System.out.println("Init game");
-		world = new World();
+		world = new World(client);
 		LaunchClient.getClientNet().world = world;
 		world.init(gameContainer);
 		currentDrawing = new Drawing();
@@ -68,11 +68,8 @@ public class PlayState extends BasicGame
 				for (int i = 0; i < array.length; i++) {
 					if (array[i] != 0) numNonzeroBytes++;
 				}
-				Logger.getGlobal().severe("Nonzero bytes in image: " + numNonzeroBytes);
 
 				p.drawing = array;
-
-				//p.drawing = lastImage;
 
 				client.sendTCP(p);
 

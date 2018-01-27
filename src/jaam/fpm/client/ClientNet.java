@@ -9,6 +9,7 @@ import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.io.IOException;
 
@@ -28,6 +29,7 @@ public class ClientNet {
         kryo.register(Tile.class);
         kryo.register(Tile[].class);
         kryo.register(Tile[][].class);
+        kryo.register(float[].class);
 
         kryo.register(org.newdawn.slick.geom.Vector2f.class);
 
@@ -61,6 +63,16 @@ public class ClientNet {
                     world.addPlayer(((NewPlayerPacket) object).connection_id, new Player(world, false));
                 }
                 else if (object instanceof PlayerActionPacket){ // Action from other player
+					PlayerActionPacket p = (PlayerActionPacket) object;
+					switch(p.action) {
+						case START_WALKING:
+							world.getOthers().get(p.connection_id).setDir(new Vector2f(p.velocity[0], p.velocity[1]));
+							break;
+						case STOP_WALKING:
+							world.getOthers().get(p.connection_id).setDir(new Vector2f());
+							world.getOthers().get(p.connection_id).setPosition(new Vector2f(p.stopPosition[0], p.stopPosition[1]));
+							break;
+					}
 
                 }
             }

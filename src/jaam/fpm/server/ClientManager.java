@@ -37,6 +37,7 @@ public class ClientManager extends Listener {
         kryo.register(Tile.class);
         kryo.register(Tile[].class);
         kryo.register(Tile[][].class);
+        kryo.register(float[].class);
 
         kryo.register(byte[].class);
         //kryo.register(Image.class);
@@ -93,7 +94,8 @@ public class ClientManager extends Listener {
                 }
             }
             else if (((PlayerActionPacket) object).action == PlayerActionPacket.Action.START_WALKING){
-                playState.startMovingPlayer(connection.getID(), ((PlayerActionPacket) object).velocity);
+                playState.startMovingPlayer(connection.getID(), new Vector2f(((PlayerActionPacket) object).velocity[0],
+																			 ((PlayerActionPacket) object).velocity[1]));
             }
             else if (((PlayerActionPacket) object).action  == PlayerActionPacket.Action.STOP_WALKING){
                 playState.stopMovingPlayer(connection.getID());
