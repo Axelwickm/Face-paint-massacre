@@ -15,7 +15,7 @@ public class LaunchClient {
 		try
 		{
 			AppGameContainer appgc;
-			appgc = new AppGameContainer(new PlayState("Simple Slick Game"));
+			appgc = new AppGameContainer(new PlayState("Simple Slick Game", clientNet.client));
 			appgc.setDisplayMode(Settings.SCREEN_WIDTH, Settings.SCREEN_HEIGHT, false);
 			appgc.start();
 		}
