@@ -4,25 +4,16 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
-import jaam.fpm.client.Drawing;
 import jaam.fpm.packet.NewPlayerPacket;
 import jaam.fpm.packet.PlayerActionPacket;
-import jaam.fpm.packet.SetFacePacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
 import javax.imageio.stream.FileImageOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.Arrays;
-
-import static jaam.fpm.packet.PlayerActionPacket.Action.START_WALKING;
 
 public class ClientManager extends Listener {
     private final Server server;
