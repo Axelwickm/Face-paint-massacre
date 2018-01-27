@@ -27,7 +27,6 @@ public class ClientManager extends Listener {
         kryo.register(jaam.fpm.packet.PlayerActionPacket.Action.class);
         kryo.register(GameStatusChangePacket.class);
         kryo.register(GameStatusChangePacket.StatusChange.class);
-        kryo.register(NotePacket.class);
         kryo.register(TileArrayPacket.class);
         kryo.register(Tile.class);
         kryo.register(Tile[].class);

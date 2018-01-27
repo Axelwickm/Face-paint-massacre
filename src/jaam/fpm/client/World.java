@@ -9,6 +9,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class World {
@@ -16,8 +17,8 @@ public class World {
 	private Camera camera;
 
 	private HashMap<Integer, Player> others = new HashMap<>();
-
 	private Player player;
+	private ArrayList<Note> notes = new ArrayList<>();
 
 	private Chunk[][] chunks;
 	private int chunksX, chunksY;
@@ -161,6 +162,7 @@ public class World {
 	public void addPlayer(int id, Player player) {
 		others.put(id, player);
 	}
+	public void addNote(Vector2f pos){ notes.add(new Note(pos)); }
 
 	public Client getClient() {
 		return client;
