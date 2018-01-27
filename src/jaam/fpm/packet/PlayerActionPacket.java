@@ -8,14 +8,15 @@ public class PlayerActionPacket {
 
     private PlayerActionPacket(){}
 
-    public static PlayerActionPacket make(Action action, Vector2f velocity){
+    public static PlayerActionPacket make(Action action){
         PlayerActionPacket p = new PlayerActionPacket();
         p.action = action;
-        p.velocity = velocity;
         return p;
     }
 
     public enum Action {
+        DISCONNECT,
+
         START_WALKING,
         STOP_WALKING
     }

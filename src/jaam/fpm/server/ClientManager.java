@@ -4,6 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import jaam.fpm.packet.NewPlayerPacket;
 import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
@@ -20,6 +21,7 @@ public class ClientManager extends Listener {
 
         this.server = new Server();
         Kryo kryo = this.server.getKryo();
+        kryo.register(NewPlayerPacket.class);
         kryo.register(PlayerActionPacket.class);
         kryo.register(jaam.fpm.packet.PlayerActionPacket.Action.class);
         kryo.register(TileArrayPacket.class);
@@ -48,6 +50,7 @@ public class ClientManager extends Listener {
         Player player = new Player(connection.getID(), new Vector2f(0,0));
         playState.addPlayer(player);
         sendWorld();
+        server.sendToAllTCP(NewPlayerPacket.make(connection.getID()));
     }
 
     @Override
