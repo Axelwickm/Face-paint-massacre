@@ -1,16 +1,22 @@
 package jaam.fpm.server;
 
+import com.esotericsoftware.kryonet.Server;
+import jaam.fpm.packet.TileArrayPacket;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Player {
-    private final int connection_id;
+    private final Server server;
+    public final int connection_id;
 
+    public boolean ready;
     private Vector2f position = new Vector2f();
     private Vector2f velocity = new Vector2f();
     private boolean dead;
 
-    public Player(int connection_id, Vector2f position) {
+    public Player(Server server, int connection_id, Vector2f position) {
+        this.server = server;
         this.connection_id = connection_id;
+        this.ready = false;
         this.position = position;
         this.velocity.set(0, 0);
 
@@ -18,7 +24,7 @@ public class Player {
     }
 
     public void update(double delta){
-
+        this.position = this.position.add(velocity.scale((float) delta));
     }
 
     public void setVelocity(Vector2f velocity) {
@@ -27,5 +33,10 @@ public class Player {
 
     public Vector2f getVelocity() {
         return velocity;
+    }
+
+
+    public void sendWorld(TileArrayPacket world){
+        server.sendToTCP(connection_id, world);
     }
 }

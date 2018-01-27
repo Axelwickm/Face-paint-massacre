@@ -9,15 +9,18 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.opengl.Texture;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.logging.Level;
 
-public class Drawing extends ImageBuffer {
+public class Drawing extends Image {
 
-    public static final int DRAWING_WIDTH = 100;
-    public static final int DRAWING_HEIGHT = 200;
+    public static final int DRAWING_WIDTH = 256;
+    public static final int DRAWING_HEIGHT = 256;
 
     public static final int MINIMUM_BRUSH_SIZE = 0;
     public static final int MAXIMUM_BRUSH_SIZE = 9;
+
+    private final Image comparison = new Image(DRAWING_WIDTH, DRAWING_HEIGHT);
 
     public static final Color[] COLORS = {
             Color.black,
@@ -32,12 +35,14 @@ public class Drawing extends ImageBuffer {
 
     private int brushSize = 0;
 
-    private boolean isErasing = false;
-
     public Drawing() throws SlickException {
         super(DRAWING_WIDTH, DRAWING_HEIGHT);
         isActive = true;
         currentColorIndex = 0;
+
+        setFilter(FILTER_NEAREST);
+        getGraphics().fillOval(0, 0, DRAWING_WIDTH, DRAWING_HEIGHT);
+        comparison.getGraphics().fillOval(0, 0, DRAWING_WIDTH, DRAWING_HEIGHT);
     }
 
     private boolean isActive;
@@ -49,38 +54,29 @@ public class Drawing extends ImageBuffer {
     int currentColorIndex;
 
 
-
-    public void update(GameContainer gc, int i) {
+    public void update(GameContainer gc, int i) throws SlickException {
         if (!isActive) return;
 
+        Graphics g = getGraphics();
         Input input = gc.getInput();
-        Color currentColor = COLORS[currentColorIndex];
+        g.setColor(COLORS[currentColorIndex]);
 
         if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
-            if (isMouseWithinDrawing(gc)) {
-                Point pt = getMouseLocationInImage(gc);
+        	Point pt = getMouseLocationInImage(gc);
+        	for (int dx = -brushSize; dx <= brushSize; ++dx) {
+				if (pt.x + dx < 0) continue;
+				if (pt.x + dx >= getWidth()) break;
+				for (int dy = -brushSize; dy <= brushSize; ++dy) {
+					if (pt.y + dy < 0) continue;
+					if (pt.y + dy >= getHeight()) break;
+					if (!isPointWithinDrawing(gc, new Point(pt.x + dx, pt.y + dy))) continue;
 
+					g.fillRect(pt.x + dx, pt.y + dy, 1, 1);
+				}
+			}
 
-                for (int dx = -brushSize; dx <= brushSize; ++dx) {
-                    if (pt.x + dx < 0) continue;
-                    if (pt.x + dx >= getWidth()) break;
-                    for (int dy = -brushSize; dy <= brushSize; ++dy) {
-                        if (pt.y + dy < 0) continue;
-                        if (pt.y + dy >= getHeight()) break;
-                        if (isErasing) setRGBA(pt.x + dx, pt.y + dy
-                                              , 0
-                                              , 0
-                                              , 0
-                                              , 0);
-                        else setRGBA(pt.x + dx, pt.y + dy
-                                    , currentColor.getRedByte()
-                                    , currentColor.getGreenByte()
-                                    , currentColor.getBlueByte()
-                                    , currentColor.getAlphaByte());
-                    }
-                }
-            }
         }
+        g.flush();
 
         if (input.isKeyPressed(KeyConfig.NEXT_COLOR)) {
             if (++currentColorIndex >= COLORS.length) currentColorIndex = 0;
@@ -92,42 +88,26 @@ public class Drawing extends ImageBuffer {
             if (++brushSize > MAXIMUM_BRUSH_SIZE) brushSize = MAXIMUM_BRUSH_SIZE;
         } else if (input.isKeyPressed(KeyConfig.SMALLER_BRUSH)) {
             if (--brushSize < MINIMUM_BRUSH_SIZE) brushSize = MINIMUM_BRUSH_SIZE;
-        } else if (input.isKeyPressed(KeyConfig.TOGGLE_ERASE)) {
-            isErasing = !isErasing;
         }
     }
 
+    public void render(final GameContainer gc, final Graphics g, final int translateX, final int translateY) {
+		float wscale = gc.getWidth() / (float)getWidth();
+		float hscale = gc.getHeight() / (float)getHeight();
+		float scale = Math.min(wscale, hscale);
 
-    public void render(GameContainer gc, Graphics g) throws SlickException
-    {
-        float wscale = gc.getWidth() / (float)getWidth();
-        float hscale = gc.getHeight() / (float)getHeight();
-        float scale = Math.min(wscale, hscale);
+		int xpos = (gc.getWidth() - (int)(scale * getWidth())) / 2;
+		int ypos = (gc.getHeight() - (int)(scale * getHeight())) / 2;
 
-        int xpos = (gc.getWidth() - (int)(scale * getWidth())) / 2;
-        int ypos = (gc.getHeight() - (int)(scale * getHeight())) / 2;
+		draw(xpos + translateX, ypos + translateY, scale);
 
-        getImage().draw(xpos, ypos, scale);
+		g.drawString("Brush size: " + brushSize + " (Z and X to change)", 10 + translateX, 30 + translateY);
+		g.drawString("Color: " + COLORS[currentColorIndex].toString() + " (Q and E to change)", 10 + translateX, 50 + translateY);
+		g.drawString("Press R to finish drawing", 10 + translateX, 70 + translateY);
+	}
 
-        g.drawString("Brush size: " + brushSize, 10, 30);
-        g.drawString("Color: " + COLORS[currentColorIndex].toString(), 10, 50);
-        g.drawString("Eraser: " + (isErasing ? "Active" : "Inactive"), 10, 70);
-    }
-
-    public boolean isMouseWithinDrawing(GameContainer gc) {
-        Input input = gc.getInput();
-
-        float wscale = gc.getWidth() / (float)getWidth();
-        float hscale = gc.getHeight() / (float)getHeight();
-        float scale = Math.min(wscale, hscale);
-
-        int xpos = (gc.getWidth() - (int)(scale * getWidth())) / 2;
-        int ypos = (gc.getHeight() - (int)(scale * getHeight())) / 2;
-
-        return input.getMouseX() - xpos >= 0
-            && input.getMouseX() - xpos < getWidth() * scale
-            && input.getMouseY() - ypos >= 0
-            && input.getMouseY() - ypos < getHeight() * scale;
+    public boolean isPointWithinDrawing(GameContainer gc, Point pt) throws SlickException {
+		return comparison.getGraphics().getPixel(pt.x, pt.y).getAlphaByte() != 0;
     }
 
     public Point getMouseLocationInImage(GameContainer gc) throws IllegalArgumentException {
