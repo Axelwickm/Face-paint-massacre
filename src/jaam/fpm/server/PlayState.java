@@ -37,4 +37,8 @@ public class PlayState {
     private boolean update(double delta){
         return true;
     }
+
+    public void addPlayer(Player player){
+        
+    }
 }

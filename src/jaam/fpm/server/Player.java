@@ -14,7 +14,7 @@ public class Player {
         this.position = position;
         this.velocity.set(0, 0);
 
-        dead = false;
+        this.dead = false;
     }
 
     public void update(double delta){
