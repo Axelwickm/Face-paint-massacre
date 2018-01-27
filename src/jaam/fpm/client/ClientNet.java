@@ -4,9 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import jaam.fpm.packet.NewPlayerPacket;
-import jaam.fpm.packet.PlayerActionPacket;
-import jaam.fpm.packet.TileArrayPacket;
+import jaam.fpm.packet.*;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
@@ -25,6 +23,9 @@ public class ClientNet {
         kryo.register(NewPlayerPacket.class);
         kryo.register(PlayerActionPacket.class);
         kryo.register(jaam.fpm.packet.PlayerActionPacket.Action.class);
+        kryo.register(GameStatusChangePacket.class);
+        kryo.register(GameStatusChangePacket.StatusChange.class);
+        kryo.register(NotePacket.class);
         kryo.register(TileArrayPacket.class);
         kryo.register(Tile.class);
         kryo.register(Tile[].class);
@@ -84,6 +85,20 @@ public class ClientNet {
                         default:
                             throw new UnsupportedOperationException("Can't handle PlayerActionPacket with action " + p.action.name());
                     }
+
+                }
+                else if (object instanceof GameStatusChangePacket){
+                    GameStatusChangePacket p = (GameStatusChangePacket) object;
+                    switch (p.statusChange){
+                        case RESTART_GAME:
+                            System.out.println("Restart game");
+                            break;
+                        case MURDERER_CHOOSEN:
+
+                            break;
+                    }
+                }
+                else if (object instanceof NotePacket){
 
                 }
             }
