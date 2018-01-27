@@ -5,6 +5,7 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import jaam.fpm.packet.*;
+import jaam.fpm.shared.State;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
@@ -95,7 +96,8 @@ public class ClientNet {
 
                             break;
                         case MURDERER_CHOOSEN:
-
+                            world.getMe().setState(p.IAmTheMurderer ? State.MURDERER : State.AlIVE);
+                            System.out.println("I am "+(p.IAmTheMurderer ? "" : "not ")+"the murderer.");
                             break;
                     }
                 }

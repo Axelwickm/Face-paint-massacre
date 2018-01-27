@@ -204,4 +204,12 @@ public class Player implements KeyListener {
 	public World getWorld() {
 		return world;
 	}
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
 }
