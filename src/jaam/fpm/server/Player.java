@@ -2,6 +2,7 @@ package jaam.fpm.server;
 
 import com.esotericsoftware.kryonet.Server;
 import jaam.fpm.packet.TileArrayPacket;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Player {
@@ -13,7 +14,15 @@ public class Player {
     private Vector2f velocity = new Vector2f();
     private boolean dead;
 
-    public Player(Server server, int connection_id, Vector2f position) {
+    private byte[] face = null;
+	public byte[] getFace() {
+		return face;
+	}
+	public void setFace(byte[] face) {
+		this.face = face;
+	}
+
+	public Player(Server server, int connection_id, Vector2f position) {
         this.server = server;
         this.connection_id = connection_id;
         this.ready = false;

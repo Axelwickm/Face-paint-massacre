@@ -8,13 +8,14 @@ import jaam.fpm.packet.NewPlayerPacket;
 import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
+import org.newdawn.slick.Image;
 
 import java.io.IOException;
 
 public class ClientNet {
     public Client client;
     public ClientNet() {
-        this.client = new Client();
+        this.client = new Client(307_200, 307_200);
         Kryo kryo = client.getKryo();
         kryo.register(NewPlayerPacket.class);
         kryo.register(PlayerActionPacket.class);
@@ -23,6 +24,8 @@ public class ClientNet {
         kryo.register(Tile[][].class);
 
         kryo.register(org.newdawn.slick.geom.Vector2f.class);
+
+        kryo.register(byte[].class);
 
         client.start();
 
@@ -57,6 +60,5 @@ public class ClientNet {
             e.printStackTrace();
         }
 
-        client.sendTCP(PlayerActionPacket.make(PlayerActionPacket.Action.READY));
     }
 }

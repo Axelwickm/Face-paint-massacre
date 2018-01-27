@@ -42,7 +42,9 @@ public class Drawing extends Image {
 
         setFilter(FILTER_NEAREST);
         getGraphics().fillOval(0, 0, DRAWING_WIDTH, DRAWING_HEIGHT);
-        comparison.getGraphics().fillOval(0, 0, DRAWING_WIDTH, DRAWING_HEIGHT);
+        Graphics g = comparison.getGraphics();
+        g.fillOval(0, 0, DRAWING_WIDTH, DRAWING_HEIGHT);
+        g.flush();
     }
 
     private boolean isActive;
@@ -55,7 +57,9 @@ public class Drawing extends Image {
 
 
     public void update(GameContainer gc, int i) throws SlickException {
-        if (!isActive) return;
+        if (!isActive) {
+        	return;
+		}
 
         Graphics g = getGraphics();
         Input input = gc.getInput();
@@ -107,7 +111,9 @@ public class Drawing extends Image {
 	}
 
     public boolean isPointWithinDrawing(GameContainer gc, Point pt) throws SlickException {
-		return comparison.getGraphics().getPixel(pt.x, pt.y).getAlphaByte() != 0;
+    	Color c = comparison.getGraphics().getPixel(pt.x, pt.y);
+    	int alpha = c.getAlphaByte();
+    	return alpha != 0;
     }
 
     public Point getMouseLocationInImage(GameContainer gc) throws IllegalArgumentException {

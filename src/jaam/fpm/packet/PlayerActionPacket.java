@@ -1,10 +1,13 @@
 package jaam.fpm.packet;
 
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 
 public class PlayerActionPacket {
     public Action action;
     public Vector2f velocity;
+
+    public byte[] drawing;
 
     private PlayerActionPacket(){}
 
