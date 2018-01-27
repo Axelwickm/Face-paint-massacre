@@ -102,28 +102,28 @@ public class Player implements KeyListener {
 		if (dir.lengthSquared() != 0) {
 			Vector2f newPos = position.copy().add(dir.copy().normalise().scale(speed * dt));
 
-			if (!controllable) {
-				position.set(newPos);
-				return;
-			}
-
-			if (world.getTileFromWorldPosition(new Vector2f(newPos.x + dir.x * (SIZE / 2),
-															position.y - (SIZE / 2))).SOLID ||
+			if (dir.x != 0) {
+				if (world.getTileFromWorldPosition(
+						new Vector2f(newPos.x + dir.x * (SIZE / 2), position.y - (SIZE / 2)+1)).SOLID ||
 					world.getTileFromWorldPosition(new Vector2f(newPos.x + dir.x * (SIZE / 2),
-																position.y + (SIZE / 2))).SOLID) {
+																position.y + (SIZE / 2)-1)).SOLID) {
 
-				newPos.x += (dir.x < 0 ? Tile.PIXELS - ((newPos.x + dir.x * (SIZE / 2)) % Tile.PIXELS)
-									   : -(((newPos.x + dir.x * (SIZE / 2)) % Tile.PIXELS)));
+					newPos.x += (dir.x < 0 ?
+								 Tile.PIXELS - ((newPos.x + dir.x * (SIZE / 2)) % Tile.PIXELS) :
+								 -(((newPos.x + dir.x * (SIZE / 2)) % Tile.PIXELS)));
+				}
 			}
 
-			if (world.getTileFromWorldPosition(new Vector2f(position.x - (SIZE / 2),
-															newPos.y + dir.y * (SIZE / 2))).SOLID ||
-					world.getTileFromWorldPosition(new Vector2f(position.x + (SIZE / 2),
+			if (dir.y != 0) {
+				if (world.getTileFromWorldPosition(
+						new Vector2f(position.x - (SIZE / 2)+1, newPos.y + dir.y * (SIZE / 2))).SOLID ||
+					world.getTileFromWorldPosition(new Vector2f(position.x + (SIZE / 2)-1,
 																newPos.y + dir.y * (SIZE / 2))).SOLID) {
 
-				System.out.println(Tile.PIXELS - ((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS));
-				newPos.y += (dir.y < 0 ? Tile.PIXELS - ((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS)
-									   : -(((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS)));
+					newPos.y += (dir.y < 0 ?
+								 Tile.PIXELS - ((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS) :
+								 -(((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS)));
+				}
 			}
 
 			position.set(newPos);
