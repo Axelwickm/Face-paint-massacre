@@ -1,5 +1,6 @@
 package jaam.fpm.client;
 
+import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -7,9 +8,13 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
+import java.util.HashMap;
+
 public class World {
 
 	private Camera camera;
+
+	private HashMap<Integer, Player> others = new HashMap<>();
 
 	private Player player;
 
@@ -18,26 +23,15 @@ public class World {
 	private int tilesX, tilesY;
 
 	private Image background;
+	private Image fogOfWar;
+
+	private boolean populated = false;
+
+	private volatile TileArrayPacket tileArrayPacket;
 
 	public World() {
 		player = new Player(this);
 		camera = new Camera();
-
-		// TODO: REMOVE
-		int t_cx = 5;
-		int t_cy = 5;
-
-		Tile[][] t_tiles = new Tile[Chunk.SIZE * t_cx][Chunk.SIZE * t_cy];
-		for (int i = 0; i < t_tiles.length; i++) {
-			for (int j = 0; j < t_tiles[i].length; j++) {
-				if (j % Chunk.SIZE == 0 || i % Chunk.SIZE == 0)
-					t_tiles[i][j] = Tile.WALL;
-				else
-					t_tiles[i][j] = Tile.FLOOR;
-			}
-		}
-
-		createChunks(Chunk.SIZE * t_cx, Chunk.SIZE * t_cy, t_tiles);
 	}
 
 	public Vector2f getCameraPosition() {
@@ -49,18 +43,31 @@ public class World {
 
 		try {
 			background = new Image("res/texture/bg.png");
+			fogOfWar = new Image("res/texture/fow.png");
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void update(final GameContainer gc, final int dt) {
+		if (!populated) {
+			if (tileArrayPacket != null) {
+				createChunks(tileArrayPacket.tilesX, tileArrayPacket.tilesY, tileArrayPacket.tiles);
+				populated = true;
+				tileArrayPacket = null;
+			}
+			return;
+		}
+
 		player.update(gc, dt);
 
 		camera.update(player.getPosition(), dt);
 	}
 
 	public void render(final Graphics g) {
+		if (!populated)
+			return;
+
 		background.draw(0, 0);
 
 		camera.translate(g);
@@ -73,6 +80,9 @@ public class World {
 		}
 
 		player.render(g);
+
+		fogOfWar.draw(camera.getPosition().x - Settings.SCREEN_WIDTH / 2,
+					  camera.getPosition().y - Settings.SCREEN_HEIGHT / 2);
 	}
 
 	public Tile getTile(int cx, int cy, int tx, int ty) {
@@ -98,6 +108,10 @@ public class World {
 		return false;
 	}
 
+	public void setPacket(TileArrayPacket tap) {
+		tileArrayPacket = tap;
+	}
+
 	public void createChunks(int tilesX, int tilesY, Tile[][] tiles) {
 		this.tilesX = tilesX;
 		this.tilesY = tilesY;
@@ -105,6 +119,8 @@ public class World {
 		this.chunksY = (int) Math.ceil(((float) tilesY) / Chunk.SIZE);
 
 		chunks = new Chunk[chunksY][chunksX];
+
+		System.out.println(tiles);
 
 		for (int cy = 0; cy < chunksY; cy++) {
 			for (int cx = 0; cx < chunksX; cx++) {
@@ -120,6 +136,10 @@ public class World {
 			}
 		}
 
-		this.chunks = chunks;
+		populated = true;
+	}
+
+	public void addPlayer(int id, Player player) {
+		others.put(id, player);
 	}
 }

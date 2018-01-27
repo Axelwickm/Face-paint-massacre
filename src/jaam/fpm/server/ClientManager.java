@@ -31,12 +31,14 @@ public class ClientManager extends Listener {
     public ClientManager(PlayState playState) {
         this.playState = playState;
 
-        this.server = new Server(307200, 307200);
+        this.server = new Server(307_200, 307_200);
         Kryo kryo = this.server.getKryo();
         kryo.register(NewPlayerPacket.class);
         kryo.register(PlayerActionPacket.class);
         kryo.register(jaam.fpm.packet.PlayerActionPacket.Action.class);
         kryo.register(TileArrayPacket.class);
+        kryo.register(Tile.class);
+        kryo.register(Tile[].class);
         kryo.register(Tile[][].class);
 
         kryo.register(byte[].class);

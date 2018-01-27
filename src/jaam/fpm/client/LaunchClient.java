@@ -9,9 +9,10 @@ import java.util.logging.Logger;
 public class LaunchClient {
 
 	private static AppGameContainer appgc;
+	private static ClientNet clientNet;
 
 	public static void main(String[] args) {
-		ClientNet clientNet = new ClientNet();
+		clientNet = new ClientNet();
 		try
 		{
 			appgc = new AppGameContainer(new PlayState("Simple Slick Game", clientNet.client));
@@ -26,5 +27,9 @@ public class LaunchClient {
 
 	public static final void exit() {
 		appgc.exit();
+	}
+
+	public static final ClientNet getClientNet() {
+		return clientNet;
 	}
 }

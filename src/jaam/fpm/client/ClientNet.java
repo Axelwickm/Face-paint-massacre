@@ -13,7 +13,11 @@ import org.newdawn.slick.Image;
 import java.io.IOException;
 
 public class ClientNet {
+
     public Client client;
+
+    public volatile World world;
+
     public ClientNet() {
         this.client = new Client(307_200, 307_200);
         Kryo kryo = client.getKryo();
@@ -21,6 +25,8 @@ public class ClientNet {
         kryo.register(PlayerActionPacket.class);
         kryo.register(jaam.fpm.packet.PlayerActionPacket.Action.class);
         kryo.register(TileArrayPacket.class);
+        kryo.register(Tile.class);
+        kryo.register(Tile[].class);
         kryo.register(Tile[][].class);
 
         kryo.register(org.newdawn.slick.geom.Vector2f.class);
@@ -44,12 +50,15 @@ public class ClientNet {
 
             @Override
             public void received(Connection connection, Object object) {
+				while (world == null) {}
                 super.received(connection, object);
                 if (object instanceof  TileArrayPacket){
                     System.out.println("Received world");
+					world.setPacket((TileArrayPacket) object);
                 }
                 else if (object instanceof NewPlayerPacket){ // Other player added
                     System.out.println("Connection id: "+((NewPlayerPacket) object).connection_id);
+                    world.addPlayer(((NewPlayerPacket) object).connection_id, new Player(world, false));
                 }
                 else if (object instanceof PlayerActionPacket){ // Action from other player
 

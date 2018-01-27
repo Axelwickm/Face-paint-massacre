@@ -30,6 +30,7 @@ public class PlayState extends BasicGame
 	public void init(final GameContainer gameContainer) throws SlickException {
 		System.out.println("Init game");
 		world = new World();
+		LaunchClient.getClientNet().world = world;
 		world.init(gameContainer);
 		currentDrawing = new Drawing();
 	}
@@ -74,6 +75,8 @@ public class PlayState extends BasicGame
 				//p.drawing = lastImage;
 
 				client.sendTCP(p);
+
+				facepaintMode = false;
 			}
 		} else {
 			world.update(gameContainer, dt);
@@ -85,16 +88,21 @@ public class PlayState extends BasicGame
 
 	@Override
 	public void render(final GameContainer gameContainer, final Graphics graphics) throws SlickException {
-		world.render(graphics);
 
-		if (currentDrawing != null) {
-			Vector2f cameraPos = world.getCameraPosition();
+		if (facepaintMode) {
+			graphics.translate(Settings.SCREEN_WIDTH / 2, Settings.SCREEN_HEIGHT / 2);
 
-			int dx = (int)((cameraPos.x - Settings.SCREEN_WIDTH / 2));
-			int dy = (int)((cameraPos.y - Settings.SCREEN_HEIGHT / 2));
-			currentDrawing.render(gameContainer, graphics, dx, dy);
+			if (currentDrawing != null) {
+				Vector2f cameraPos = world.getCameraPosition();
 
-			currentDrawing.render(gameContainer, graphics, dx, dy);
+				int dx = (int) ((cameraPos.x - Settings.SCREEN_WIDTH / 2));
+				int dy = (int) ((cameraPos.y - Settings.SCREEN_HEIGHT / 2));
+				currentDrawing.render(gameContainer, graphics, dx, dy);
+
+				currentDrawing.render(gameContainer, graphics, dx, dy);
+			}
+		} else {
+			world.render(graphics);
 		}
 	}
 
