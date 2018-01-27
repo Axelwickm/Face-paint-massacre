@@ -96,6 +96,9 @@ public class ClientManager extends Listener {
             else if (((PlayerActionPacket) object).action  == PlayerActionPacket.Action.STOP_WALKING){
                 playState.stopMovingPlayer(connection.getID());
             }
+
+            ((PlayerActionPacket) object).connection_id = connection.getID();
+            server.sendToAllExceptTCP(connection.getID(), object);
         }
     }
 }
