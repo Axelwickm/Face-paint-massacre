@@ -58,32 +58,35 @@ public class Player implements KeyListener {
 		}
 
 		if (pressed) {
-			PlayerActionPacket p = PlayerActionPacket.make(PlayerActionPacket.Action.START_WALKING);
-
-			p.velocity = new float[] {dir.x, dir.y};
-
-			world.getClient().sendTCP(p);
+			sendWalkPacket();
 		}
 	}
 
 	@Override
 	public void keyReleased(final int key, final char c) {
+
+		boolean released = false;
+
 		if (key == KeyConfig.WALK_UP) {
 			dir.y += 1;
+			released = true;
 		} else if (key == KeyConfig.WALK_DOWN) {
 			dir.y -= 1;
+			released = true;
 		} else if (key == KeyConfig.WALK_LEFT) {
 			dir.x += 1;
+			released = true;
 		} else if (key == KeyConfig.WALK_RIGHT) {
 			dir.x -= 1;
+			released = true;
 		}
 
-		if (dir.lengthSquared() == 0) {
-			PlayerActionPacket p = PlayerActionPacket.make(PlayerActionPacket.Action.STOP_WALKING);
-
-			p.stopPosition = new float[] {position.x, position.y};
-
-			world.getClient().sendTCP(p);
+		if (released) {
+			if (dir.lengthSquared() == 0) {
+				sendStopPacket();
+			} else {
+				sendWalkPacket();
+			}
 		}
 	}
 
@@ -161,5 +164,21 @@ public class Player implements KeyListener {
 
 	public void setSpeed(final float speed) {
 		this.speed = speed;
+	}
+
+	public void sendWalkPacket() {
+		PlayerActionPacket p = PlayerActionPacket.make(PlayerActionPacket.Action.START_WALKING);
+
+		p.velocity = new float[] {dir.x, dir.y};
+
+		world.getClient().sendTCP(p);
+	}
+
+	public void sendStopPacket() {
+		PlayerActionPacket p = PlayerActionPacket.make(PlayerActionPacket.Action.STOP_WALKING);
+
+		p.stopPosition = new float[] {position.x, position.y};
+
+		world.getClient().sendTCP(p);
 	}
 }

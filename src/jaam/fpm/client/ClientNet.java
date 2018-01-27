@@ -90,7 +90,7 @@ public class ClientNet {
         });
 
         try {
-            client.connect(5000, "127.0.0.1", 54555, 54777);
+            client.connect(5000, "10.251.14.129", 54555, 54777);
         } catch (IOException e) {
             e.printStackTrace();
         }
