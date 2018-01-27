@@ -22,6 +22,14 @@ public class Player {
 		this.face = face;
 	}
 
+	public Vector2f getPosition() {
+		return position;
+	}
+
+	public void setPosition(Vector2f position) {
+		this.position = position;
+	}
+
 	public Player(Server server, int connection_id, Vector2f position) {
         this.server = server;
         this.connection_id = connection_id;

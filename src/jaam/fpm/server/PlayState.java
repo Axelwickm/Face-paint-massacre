@@ -5,6 +5,7 @@ import jaam.fpm.shared.Tile;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static java.lang.Math.abs;
 
@@ -18,6 +19,8 @@ public class PlayState {
     public boolean drawingMode;
     public Tile[][] world;
     public HashMap<Integer, Player> players;
+
+    private HashMap<Vector2f, byte[]> notes = new HashMap<>();
 
     public PlayState() {
         running = false;
@@ -96,4 +99,6 @@ public class PlayState {
     public void stopMovingPlayer(int player_id){
         players.get(player_id).setVelocity(new Vector2f(0,0));
     }
+
+    public void placeNote(Vector2f location, byte[] image) { notes.put(location, image); }
 }

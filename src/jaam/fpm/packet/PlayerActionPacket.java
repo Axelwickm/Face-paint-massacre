@@ -23,6 +23,8 @@ public class PlayerActionPacket {
         READY,
 
         START_WALKING,
-        STOP_WALKING
+        STOP_WALKING,
+
+        POST_NOTE
     }
 }
