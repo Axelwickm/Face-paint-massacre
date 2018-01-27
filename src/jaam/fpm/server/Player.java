@@ -3,7 +3,7 @@ package jaam.fpm.server;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Player {
-    private final int connection_id;
+    public final int connection_id;
 
     private Vector2f position = new Vector2f();
     private Vector2f velocity = new Vector2f();
@@ -18,7 +18,7 @@ public class Player {
     }
 
     public void update(double delta){
-
+        this.position = this.position.add(velocity.scale((float) delta));
     }
 
     public void setVelocity(Vector2f velocity) {

@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Listener;
 import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.io.IOException;
 
@@ -15,8 +16,12 @@ public class ClientNet {
         Client client = new Client();
         Kryo kryo = client.getKryo();
         kryo.register(PlayerActionPacket.class);
+        kryo.register(jaam.fpm.packet.PlayerActionPacket.Action.class);
         kryo.register(TileArrayPacket.class);
         kryo.register(Tile[][].class);
+
+        kryo.register(org.newdawn.slick.geom.Vector2f.class);
+
         client.start();
 
         client.addListener(new Listener(){
@@ -46,5 +51,7 @@ public class ClientNet {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        client.sendTCP(PlayerActionPacket.make(PlayerActionPacket.Action.START_WALKING, new Vector2f(5,5)));
     }
 }

@@ -21,8 +21,11 @@ public class ClientManager extends Listener {
         this.server = new Server();
         Kryo kryo = this.server.getKryo();
         kryo.register(PlayerActionPacket.class);
+        kryo.register(jaam.fpm.packet.PlayerActionPacket.Action.class);
         kryo.register(TileArrayPacket.class);
         kryo.register(Tile[][].class);
+
+        kryo.register(org.newdawn.slick.geom.Vector2f.class);
 
         new Thread(this.server).start();
 
@@ -55,7 +58,12 @@ public class ClientManager extends Listener {
     @Override
     public void received(Connection connection, Object object){
         if (object instanceof PlayerActionPacket){
-
+            if (((PlayerActionPacket) object).action == PlayerActionPacket.Action.START_WALKING){
+                playState.startMovingPlayer(connection.getID(), ((PlayerActionPacket) object).velocity);
+            }
+            else if (((PlayerActionPacket) object).action  == PlayerActionPacket.Action.STOP_WALKING){
+                playState.stopMovingPlayer(connection.getID());
+            }
         }
     }
 }
