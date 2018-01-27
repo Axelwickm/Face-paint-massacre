@@ -102,11 +102,6 @@ public class Player implements KeyListener {
 		if (dir.lengthSquared() != 0) {
 			Vector2f newPos = position.copy().add(dir.copy().normalise().scale(speed * dt));
 
-			if (!controllable) {
-				position.set(newPos);
-				return;
-			}
-
 			if (world.getTileFromWorldPosition(new Vector2f(newPos.x + dir.x * (SIZE / 2),
 															position.y - (SIZE / 2))).SOLID ||
 					world.getTileFromWorldPosition(new Vector2f(newPos.x + dir.x * (SIZE / 2),
