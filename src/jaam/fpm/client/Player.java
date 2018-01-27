@@ -1,8 +1,14 @@
 package jaam.fpm.client;
 
 import jaam.fpm.packet.PlayerActionPacket;
+import jaam.fpm.shared.State;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.*;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Player implements KeyListener {
@@ -10,6 +16,7 @@ public class Player implements KeyListener {
 	public static final int SIZE = 32;
 
 	public static final float DEFAULT_SPEED = .3f;
+	public static final int DEFAULT_HEALTH = 5;
 
 	public static final int VIEW_RADIUS = 1;
 
@@ -32,6 +39,12 @@ public class Player implements KeyListener {
 		this.face = face;
 	}
 
+	private int health = DEFAULT_HEALTH;
+
+	private State state = State.AlIVE;
+
+	private Weapon weapon;
+
 	public Player(World world) {
 		this(world, true);
 	}
@@ -39,9 +52,7 @@ public class Player implements KeyListener {
 	public Player(World world, boolean controllable) {
 		this.world = world;
 		this.controllable = controllable;
-
-		position.x = 100;
-		position.y = 100;
+		weapon = new Knife(this);
 	}
 
 	@Override public void inputStarted() { }
@@ -67,6 +78,11 @@ public class Player implements KeyListener {
 		if (pressed) {
 			sendWalkPacket();
 		}
+
+		if (key == KeyConfig.TOGGLE_WEAPON)
+			weapon.toggle();
+		if (key == KeyConfig.USE_WEAPON)
+			weapon.use();
 	}
 
 	@Override
@@ -135,10 +151,17 @@ public class Player implements KeyListener {
 
 			position.set(newPos);
 		}
+
+		weapon.update(dt);
 	}
 
 	public void render(final Graphics g) {
-		g.fillRect(position.x - SIZE / 2, position.y - SIZE / 2, SIZE, SIZE);
+		g.pushTransform();
+		g.setColor(Color.white);
+		g.translate(position.x, position.y);
+		g.fillRect(- SIZE / 2, - SIZE / 2, SIZE, SIZE);
+		weapon.render(g);
+		g.popTransform();
 	}
 
 	public int getChunkX() {
@@ -187,5 +210,9 @@ public class Player implements KeyListener {
 		p.stopPosition = new float[] {position.x, position.y};
 
 		world.getClient().sendTCP(p);
+	}
+
+	public World getWorld() {
+		return world;
 	}
 }

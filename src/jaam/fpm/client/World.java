@@ -170,4 +170,5 @@ public class World {
 		return others;
 	}
 	public Player getPlayer(int id) { return others.get(id); }
+	public Player getMe() { return player; }
 }

@@ -25,6 +25,7 @@ public class PlayerActionPacket {
         START_WALKING,
         STOP_WALKING,
 
-        POST_NOTE
+        POST_NOTE,
+        USE_WEAPON
     }
 }

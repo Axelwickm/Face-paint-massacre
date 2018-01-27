@@ -35,6 +35,10 @@ public class PlayState extends BasicGame
 		currentDrawing = new Drawing();
 	}
 
+	public void restartGame(){
+		facepaintMode = true;
+	}
+
 	@Override
 	public void update(final GameContainer gameContainer, final int dt) throws SlickException {
 

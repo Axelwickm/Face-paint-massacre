@@ -2,13 +2,16 @@ package jaam.fpm.server;
 
 import jaam.fpm.packet.GameStatusChangePacket;
 import jaam.fpm.packet.TileArrayPacket;
+import jaam.fpm.shared.State;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.Game;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 
+import static jaam.fpm.packet.GameStatusChangePacket.StatusChange.MURDERER_CHOOSEN;
 import static jaam.fpm.packet.GameStatusChangePacket.StatusChange.RESTART_GAME;
 import static java.lang.Math.abs;
 
@@ -33,6 +36,7 @@ public class PlayState {
     }
 
     public void restartGame(){
+        System.out.println("(Re)starting game.");
         running = false;
         ticks = 0;
         playerCount = 0;
@@ -69,7 +73,7 @@ public class PlayState {
             this.aliveCount = 0;
             for (Player  p : players.values()){
                 p.update(delta);
-                this.aliveCount += p.state == Player.State.AlIVE ? 1 : 0;
+                this.aliveCount += p.state == State.AlIVE ? 1 : 0;
             }
             if (aliveCount == 0){
                 restartGame();
@@ -121,4 +125,23 @@ public class PlayState {
     }
 
     public void placeNote(Vector2f location, byte[] image) { notes.put(location, image); }
+
+    public void chooseMurderer(){
+        Random rand = new Random();
+
+        Player pm = (Player) players.values().toArray()[rand.nextInt(playerCount)];
+        {
+            GameStatusChangePacket p = GameStatusChangePacket.make(MURDERER_CHOOSEN);
+            p.IAmTheMurderer = true;
+            pm.sendGameStatusChange(p);
+        }
+
+        for (Player pa : players.values()){
+            if (pa != pm){
+                GameStatusChangePacket p = GameStatusChangePacket.make(MURDERER_CHOOSEN);
+                p.IAmTheMurderer = false;
+                pa.sendGameStatusChange(p);
+            }
+        }
+    }
 }
