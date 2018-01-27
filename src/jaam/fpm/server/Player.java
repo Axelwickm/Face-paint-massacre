@@ -1,6 +1,7 @@
 package jaam.fpm.server;
 
 import com.esotericsoftware.kryonet.Server;
+import jaam.fpm.packet.GameStatusChangePacket;
 import jaam.fpm.packet.TileArrayPacket;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
@@ -12,7 +13,7 @@ public class Player {
     public boolean ready;
     private Vector2f position = new Vector2f();
     private Vector2f velocity = new Vector2f();
-    private boolean dead;
+    public State state;
 
     private PlayerRole role = PlayerRole.REGULAR;
 
@@ -39,7 +40,7 @@ public class Player {
         this.position = position;
         this.velocity.set(0, 0);
 
-        this.dead = false;
+        this.state = State.AlIVE;
     }
 
     public void update(double delta){
@@ -55,8 +56,15 @@ public class Player {
     }
 
 
-    public void sendWorld(TileArrayPacket world){
-        server.sendToTCP(connection_id, world);
+    public void sendWorld(TileArrayPacket p){
+        server.sendToTCP(connection_id, p);
+    }
+    public void sendGameStatusChange(GameStatusChangePacket p){ server.sendToTCP(connection_id, p); }
+
+    enum State {
+	    AlIVE,
+        DEAD,
+        MURDERER
     }
 }
 

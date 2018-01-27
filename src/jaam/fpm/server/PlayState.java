@@ -1,12 +1,15 @@
 package jaam.fpm.server;
 
+import jaam.fpm.packet.GameStatusChangePacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
+import org.newdawn.slick.Game;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static jaam.fpm.packet.GameStatusChangePacket.StatusChange.RESTART_GAME;
 import static java.lang.Math.abs;
 
 public class PlayState {
@@ -20,22 +23,31 @@ public class PlayState {
     public Tile[][] world;
     public HashMap<Integer, Player> players;
     public int playerCount;
+    public int aliveCount;
 
     private HashMap<Vector2f, byte[]> notes = new HashMap<>();
 
     public PlayState() {
+        restartGame();
+    }
+
+    public void restartGame(){
         running = false;
         ticks = 0;
         playerCount = 0;
+        aliveCount = 0;
 
         drawingMode = true;
-        players = new HashMap<>();
+        GameStatusChangePacket p = GameStatusChangePacket.make(RESTART_GAME);
+        for (Player player : players.values()){
+            player.sendGameStatusChange(p);
+        };
     }
 
     public void start(){
         running = true;
         long lastTime = System.nanoTime();
-        double delta = 0;
+        double delta;
 
 
         while (running){
@@ -53,8 +65,13 @@ public class PlayState {
 
     private boolean update(double delta){
         if (!drawingMode){
+            this.aliveCount = 0;
             for (Player  p : players.values()){
                 p.update(delta);
+                this.aliveCount += p.state == Player.State.AlIVE ? 1 : 0;
+            }
+            if (aliveCount == 0){
+                restartGame();
             }
         }
         else {
