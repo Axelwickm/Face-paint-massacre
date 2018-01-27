@@ -1,22 +1,32 @@
 package jaam.fpm.server;
 
+import com.fisherevans.procedural_generation.dungeons.DungeonGenerator;
+import com.fisherevans.procedural_generation.dungeons.DungeonRenderer;
 import jaam.fpm.shared.Tile;
 
-public class MapGenerator {
-    public static Tile[][] generate(int tilesX, int tilesY){
+import java.awt.image.BufferedImage;
 
-        Tile[][] tiles = new Tile[tilesY][tilesX];
-        for (int y = 0; y < tilesY; y++){
-            for (int x = 0; x < tilesY; x++){
-                tiles[y][x] = Tile.FLOOR;
+public class MapGenerator {
+    public static Tile[][] generate(int size){
+
+
+        DungeonGenerator.generate();
+
+        BufferedImage img = DungeonRenderer.drawFinalDungeon();
+
+        Tile[][] tiles = new Tile[img.getHeight()][img.getWidth()];
+        for (int y = 0; y < img.getHeight(); y++){
+            for (int x = 0; x < img.getWidth(); x++){
+                if (img.getRGB(x, y) == DungeonRenderer.green.hashCode()){
+                    tiles[y][x] = Tile.FLOOR;
+                }
+                else {
+                    tiles[y][x] = Tile.WALL;
+                }
             }
         }
 
-        tiles[0][0] = Tile.WALL;
-        tiles[0][2] = Tile.WALL;
-        tiles[0][4] = Tile.WALL;
-        tiles[1][0] = Tile.WALL;
-        tiles[2][0] = Tile.WALL;
+        DungeonRenderer.view();
 
         return tiles;
     }
