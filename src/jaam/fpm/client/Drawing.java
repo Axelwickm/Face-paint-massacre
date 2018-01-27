@@ -33,7 +33,7 @@ public class Drawing extends Image {
             Color.white
     };
 
-    private int brushSize = 0;
+    private int brushSize = 1;
 
     public Drawing() throws SlickException {
         super(DRAWING_WIDTH, DRAWING_HEIGHT);

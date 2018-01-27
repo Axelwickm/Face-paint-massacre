@@ -1,6 +1,7 @@
 package jaam.fpm.server;
 
 import com.esotericsoftware.kryonet.Server;
+import jaam.fpm.packet.GameStatusChangePacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.State;
 import org.newdawn.slick.Image;
@@ -54,7 +55,10 @@ public class Player {
     }
 
 
-    public void sendWorld(TileArrayPacket world){
-        server.sendToTCP(connection_id, world);
+    public void sendWorld(TileArrayPacket p){
+        server.sendToTCP(connection_id, p);
     }
+
+    public void sendGameStatusChange(GameStatusChangePacket p){ server.sendToTCP(connection_id, p); }
+
 }
