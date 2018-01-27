@@ -20,13 +20,19 @@ public class PlayState {
     public Tile[][] world;
     public HashMap<Integer, Player> players;
     public int playerCount;
+    public int aliveCount;
 
     private HashMap<Vector2f, byte[]> notes = new HashMap<>();
 
     public PlayState() {
+        resetGame();
+    }
+
+    public void resetGame(){
         running = false;
         ticks = 0;
         playerCount = 0;
+        aliveCount = 0;
 
         drawingMode = true;
         players = new HashMap<>();
@@ -53,8 +59,13 @@ public class PlayState {
 
     private boolean update(double delta){
         if (!drawingMode){
+            this.aliveCount = 0;
             for (Player  p : players.values()){
                 p.update(delta);
+                this.aliveCount += p.state == Player.State.AlIVE ? 1 : 0;
+            }
+            if (aliveCount == 0){
+                //resetGame();
             }
         }
         else {
@@ -65,7 +76,7 @@ public class PlayState {
                 this.playerCount++;
             }
             if (allReady && this.playerCount > 0){
-                startGame();
+                resetGame();
             }
         }
 

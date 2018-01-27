@@ -12,7 +12,7 @@ public class Player {
     public boolean ready;
     private Vector2f position = new Vector2f();
     private Vector2f velocity = new Vector2f();
-    private boolean dead;
+    public State state;
 
     private byte[] face = null;
 	public byte[] getFace() {
@@ -37,7 +37,7 @@ public class Player {
         this.position = position;
         this.velocity.set(0, 0);
 
-        this.dead = false;
+        this.state = State.AlIVE;
     }
 
     public void update(double delta){
@@ -55,5 +55,11 @@ public class Player {
 
     public void sendWorld(TileArrayPacket world){
         server.sendToTCP(connection_id, world);
+    }
+
+    enum State {
+	    AlIVE,
+        DEAD,
+        MURDERER
     }
 }
