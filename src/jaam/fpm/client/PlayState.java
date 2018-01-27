@@ -59,6 +59,8 @@ public class PlayState extends BasicGame
 				packet = PlayerActionPacket.make(PlayerActionPacket.Action.READY);
 			} else {
 				packet = PlayerActionPacket.make(PlayerActionPacket.Action.POST_NOTE);
+				float[] pos = {world.getMe().getPosition().x, world.getMe().getPosition().y};
+				packet.notePosition = pos;
 			}
 			packet.drawing = exportImageData(lastImage);
 			client.sendTCP(packet);

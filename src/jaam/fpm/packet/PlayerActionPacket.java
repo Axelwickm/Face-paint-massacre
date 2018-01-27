@@ -9,6 +9,7 @@ public class PlayerActionPacket {
     public float[] velocity;
     public float[] stopPosition;
 
+    public float[] notePosition;
     public byte[] drawing;
 
     private PlayerActionPacket(){}

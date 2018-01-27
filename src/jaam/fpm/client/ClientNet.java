@@ -26,7 +26,6 @@ public class ClientNet {
         kryo.register(jaam.fpm.packet.PlayerActionPacket.Action.class);
         kryo.register(GameStatusChangePacket.class);
         kryo.register(GameStatusChangePacket.StatusChange.class);
-        kryo.register(NotePacket.class);
         kryo.register(TileArrayPacket.class);
         kryo.register(Tile.class);
         kryo.register(Tile[].class);
@@ -81,7 +80,7 @@ public class ClientNet {
 							world.getOthers().get(p.connection_id).setPosition(new Vector2f(p.stopPosition[0], p.stopPosition[1]));
                             break;
                         case POST_NOTE:
-                            // TODO: Figure out how to display notes.
+                            world.addNote(new Vector2f(p.notePosition[0], p.notePosition[1]));
                             break;
                         default:
                             throw new UnsupportedOperationException("Can't handle PlayerActionPacket with action " + p.action.name());
@@ -100,9 +99,6 @@ public class ClientNet {
                             System.out.println("I am "+(p.IAmTheMurderer ? "" : "not ")+"the murderer.");
                             break;
                     }
-                }
-                else if (object instanceof NotePacket){
-
                 }
             }
         });
