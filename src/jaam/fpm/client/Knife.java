@@ -1,5 +1,6 @@
 package jaam.fpm.client;
 
+import jaam.fpm.packet.PlayerActionPacket;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
@@ -9,6 +10,8 @@ public class Knife extends Weapon {
 	public static final int SIZE = 16;
 
 	public static final int STAB_DURATION = 200;
+
+	public static final int DAMAGE = 3;
 
 	private int stabbing = 0;
 
@@ -20,15 +23,20 @@ public class Knife extends Weapon {
 
 	@Override
 	public void use() {
-		if (!active)
+		if (!active || stabbing > 0)
 			return;
 
 		stabbing = STAB_DURATION;
 
-		for (Player o : player.getWorld().getOthers().values()) {
-			if (o.getPosition().distance(player.getPosition().copy().add(dir.copy().scale(SIZE))) < Player.SIZE) {
-				System.out.println("Stab!");
-			}
+
+
+		if (player == player.getWorld().getMe()) {
+			player.getWorld().getClient().sendTCP(PlayerActionPacket.make(PlayerActionPacket.Action.USE_WEAPON));
+			return;
+		}
+
+		if (player.getWorld().getMe().getPosition().distance(player.getPosition().copy().add(dir.copy().scale(SIZE))) < Player.SIZE) {
+			player.health -= DAMAGE;
 		}
 	}
 

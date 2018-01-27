@@ -82,6 +82,9 @@ public class ClientNet {
                         case POST_NOTE:
                             // TODO: Figure out how to display notes.
                             break;
+						case USE_WEAPON:
+							world.getOthers().get(p.connection_id).getWeapon().use();
+							break;
                         default:
                             throw new UnsupportedOperationException("Can't handle PlayerActionPacket with action " + p.action.name());
                     }

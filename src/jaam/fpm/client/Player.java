@@ -28,7 +28,7 @@ public class Player implements KeyListener {
 
 	private boolean controllable;
 
-	private int health = DEFAULT_HEALTH;
+	public int health = DEFAULT_HEALTH;
 
 	private State state = State.AlIVE;
 
@@ -48,6 +48,10 @@ public class Player implements KeyListener {
 
 	@Override
 	public void keyPressed(final int key, final char c) {
+		//TODO: FIX HEALTH BEHAVIOUR
+		if (health <= 0)
+			return;
+
 		boolean pressed = false;
 
 		if (key == KeyConfig.WALK_UP) {
@@ -109,6 +113,7 @@ public class Player implements KeyListener {
 	@Override public void inputEnded() { }
 
 	public void update(final GameContainer gameContainer, final int dt) {
+
 
 		// Move
 		if (dir.lengthSquared() != 0) {
@@ -203,5 +208,9 @@ public class Player implements KeyListener {
 
 	public World getWorld() {
 		return world;
+	}
+
+	public Weapon getWeapon() {
+		return weapon;
 	}
 }
