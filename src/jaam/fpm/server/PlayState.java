@@ -77,7 +77,7 @@ public class PlayState {
                 this.playerCount++;
             }
             if (allReady && this.playerCount > 0){
-                resetGame();
+                startGame();
             }
         }
 
