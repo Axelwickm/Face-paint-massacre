@@ -13,6 +13,10 @@ public class Camera {
 
 	private float speed = DEFAULT_SPEED;
 
+	public Vector2f getPosition() {
+		return position;
+	}
+
 	public Camera() {
 
 	}
