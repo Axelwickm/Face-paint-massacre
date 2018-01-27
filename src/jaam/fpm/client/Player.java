@@ -18,7 +18,7 @@ public class Player {
 	}
 
 	public void update(final int dt) {
-		System.out.println(dt);
+
 	}
 
 	public void render(final Graphics g) {
