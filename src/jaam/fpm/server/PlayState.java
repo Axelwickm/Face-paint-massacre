@@ -28,6 +28,7 @@ public class PlayState {
     private HashMap<Vector2f, byte[]> notes = new HashMap<>();
 
     public PlayState() {
+        players = new HashMap<>();
         restartGame();
     }
 
@@ -41,7 +42,7 @@ public class PlayState {
         GameStatusChangePacket p = GameStatusChangePacket.make(RESTART_GAME);
         for (Player player : players.values()){
             player.sendGameStatusChange(p);
-        };
+        }
     }
 
     public void start(){
