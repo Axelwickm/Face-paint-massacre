@@ -33,6 +33,7 @@ public class PlayState {
     }
 
     public void restartGame(){
+        System.out.println("(Re)starting game.");
         running = false;
         ticks = 0;
         playerCount = 0;

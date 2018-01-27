@@ -91,7 +91,8 @@ public class ClientNet {
                     GameStatusChangePacket p = (GameStatusChangePacket) object;
                     switch (p.statusChange){
                         case RESTART_GAME:
-                            System.out.println("Restart game");
+                            System.out.println("(Re)start game");
+
                             break;
                         case MURDERER_CHOOSEN:
 
