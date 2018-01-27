@@ -22,8 +22,15 @@ public class Player implements KeyListener {
 
 	private World world;
 
+	private boolean controllable;
+
 	public Player(World world) {
+		this(world, true);
+	}
+
+	public Player(World world, boolean controllable) {
 		this.world = world;
+		this.controllable = controllable;
 
 		position.x = 100;
 		position.y = 100;
@@ -69,12 +76,20 @@ public class Player implements KeyListener {
 		if (dir.lengthSquared() != 0) {
 			Vector2f newPos = position.copy().add(dir.copy().normalise().scale(speed * dt));
 
-			if (world.getTileFromWorldPosition(new Vector2f(newPos.x + dir.x * (SIZE / 2), position.y)).SOLID) {
+			if (world.getTileFromWorldPosition(new Vector2f(newPos.x + dir.x * (SIZE / 2),
+															position.y - (SIZE / 2))).SOLID ||
+					world.getTileFromWorldPosition(new Vector2f(newPos.x + dir.x * (SIZE / 2),
+																position.y + (SIZE / 2))).SOLID) {
+
 				newPos.x += (dir.x < 0 ? Tile.PIXELS - ((newPos.x + dir.x * (SIZE / 2)) % Tile.PIXELS)
 									   : -(((newPos.x + dir.x * (SIZE / 2)) % Tile.PIXELS)));
 			}
 
-			if (world.getTileFromWorldPosition(new Vector2f(position.x, newPos.y + dir.y * (SIZE / 2))).SOLID) {
+			if (world.getTileFromWorldPosition(new Vector2f(position.x - (SIZE / 2),
+															newPos.y + dir.y * (SIZE / 2))).SOLID ||
+					world.getTileFromWorldPosition(new Vector2f(position.x + (SIZE / 2),
+																newPos.y + dir.y * (SIZE / 2))).SOLID) {
+
 				newPos.y += (dir.y < 0 ? Tile.PIXELS - ((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS)
 									   : -(((newPos.y + dir.y * (SIZE / 2)) % Tile.PIXELS)));
 			}

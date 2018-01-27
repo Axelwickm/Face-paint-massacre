@@ -1,5 +1,6 @@
 package jaam.fpm.client;
 
+import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -7,9 +8,13 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
+import java.util.HashMap;
+
 public class World {
 
 	private Camera camera;
+
+	private HashMap<Integer, Player> others = new HashMap<>();
 
 	private Player player;
 
@@ -18,8 +23,11 @@ public class World {
 	private int tilesX, tilesY;
 
 	private Image background;
+	private Image fogOfWar;
 
 	private boolean populated = false;
+
+	private volatile TileArrayPacket tileArrayPacket;
 
 	public World() {
 		player = new Player(this);
@@ -35,14 +43,22 @@ public class World {
 
 		try {
 			background = new Image("res/texture/bg.png");
+			fogOfWar = new Image("res/texture/fow.png");
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void update(final GameContainer gc, final int dt) {
-		if (!populated)
+		if (!populated) {
+			if (tileArrayPacket != null) {
+				createChunks(tileArrayPacket.tilesX, tileArrayPacket.tilesY, tileArrayPacket.tiles);
+				populated = true;
+				tileArrayPacket = null;
+			}
 			return;
+		}
+
 		player.update(gc, dt);
 
 		camera.update(player.getPosition(), dt);
@@ -64,6 +80,9 @@ public class World {
 		}
 
 		player.render(g);
+
+		fogOfWar.draw(camera.getPosition().x - Settings.SCREEN_WIDTH / 2,
+					  camera.getPosition().y - Settings.SCREEN_HEIGHT / 2);
 	}
 
 	public Tile getTile(int cx, int cy, int tx, int ty) {
@@ -87,6 +106,10 @@ public class World {
 		}
 
 		return false;
+	}
+
+	public void setPacket(TileArrayPacket tap) {
+		tileArrayPacket = tap;
 	}
 
 	public void createChunks(int tilesX, int tilesY, Tile[][] tiles) {
@@ -114,5 +137,9 @@ public class World {
 		}
 
 		populated = true;
+	}
+
+	public void addPlayer(int id, Player player) {
+		others.put(id, player);
 	}
 }

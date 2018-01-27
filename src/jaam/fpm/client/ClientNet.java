@@ -18,12 +18,14 @@ public class ClientNet {
     public volatile World world;
 
     public ClientNet() {
-        this.client = new Client();
+        this.client = new Client(20000, 20000);
         Kryo kryo = client.getKryo();
         kryo.register(NewPlayerPacket.class);
         kryo.register(PlayerActionPacket.class);
         kryo.register(jaam.fpm.packet.PlayerActionPacket.Action.class);
         kryo.register(TileArrayPacket.class);
+        kryo.register(Tile.class);
+        kryo.register(Tile[].class);
         kryo.register(Tile[][].class);
 
         kryo.register(org.newdawn.slick.geom.Vector2f.class);
@@ -45,15 +47,15 @@ public class ClientNet {
 
             @Override
             public void received(Connection connection, Object object) {
+				while (world == null) {}
                 super.received(connection, object);
                 if (object instanceof  TileArrayPacket){
                     System.out.println("Received world");
-					TileArrayPacket p = (TileArrayPacket) object;
-					while (world == null) {}
-					world.createChunks(p.tilesX, p.tilesY, p.tiles);
+					world.setPacket((TileArrayPacket) object);
                 }
                 else if (object instanceof NewPlayerPacket){ // Other player added
                     System.out.println("Connection id: "+((NewPlayerPacket) object).connection_id);
+                    world.addPlayer(((NewPlayerPacket) object).connection_id, new Player(world, false));
                 }
                 else if (object instanceof PlayerActionPacket){ // Action from other player
 

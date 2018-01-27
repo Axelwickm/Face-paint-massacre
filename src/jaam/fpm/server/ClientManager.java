@@ -19,12 +19,14 @@ public class ClientManager extends Listener {
     public ClientManager(PlayState playState) {
         this.playState = playState;
 
-        this.server = new Server();
+        this.server = new Server(20000, 20000);
         Kryo kryo = this.server.getKryo();
         kryo.register(NewPlayerPacket.class);
         kryo.register(PlayerActionPacket.class);
         kryo.register(jaam.fpm.packet.PlayerActionPacket.Action.class);
         kryo.register(TileArrayPacket.class);
+        kryo.register(Tile.class);
+        kryo.register(Tile[].class);
         kryo.register(Tile[][].class);
 
         kryo.register(org.newdawn.slick.geom.Vector2f.class);
