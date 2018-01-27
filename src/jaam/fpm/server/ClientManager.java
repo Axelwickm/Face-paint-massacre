@@ -106,6 +106,9 @@ public class ClientManager extends Listener {
                 case STOP_WALKING:
                     playState.stopMovingPlayer(connection.getID());
                     break;
+                case POST_NOTE:
+                    playState.placeNote(playState.players.get(connection.getID()).getPosition(), packet.drawing);
+                    break;
                 default:
                     throw new UnsupportedOperationException("Can't handle PlayerActionPacket with action: " + packet.action.name());
             }
