@@ -1,6 +1,7 @@
 package jaam.fpm.server;
 
 import jaam.fpm.packet.TileArrayPacket;
+import jaam.fpm.shared.State;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -62,7 +63,7 @@ public class PlayState {
             this.aliveCount = 0;
             for (Player  p : players.values()){
                 p.update(delta);
-                this.aliveCount += p.state == Player.State.AlIVE ? 1 : 0;
+                this.aliveCount += p.state == State.AlIVE ? 1 : 0;
             }
             if (aliveCount == 0){
                 //resetGame();
