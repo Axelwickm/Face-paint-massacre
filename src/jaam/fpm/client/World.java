@@ -55,6 +55,8 @@ public class World {
 		}
 
 		Audio.init();
+
+		Audio.playMusic();
 	}
 
 	public void update(final GameContainer gc, final int dt) {

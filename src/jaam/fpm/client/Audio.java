@@ -1,5 +1,6 @@
 package jaam.fpm.client;
 
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 
@@ -11,6 +12,8 @@ public class Audio {
 
 	private static HashMap<String, Sound> sounds;
 
+	private static Music music;
+
 	public static final void play(String sound) {
 		sounds.get(sound).play();
 	}
@@ -19,10 +22,15 @@ public class Audio {
 		sounds = new HashMap<>();
 
 		try {
+			music = new Music("res/audio/music.wav");
 			sounds.put("stab", new Sound("res/audio/stab.wav"));
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static final void playMusic() {
+		music.play();
 	}
 
 }
