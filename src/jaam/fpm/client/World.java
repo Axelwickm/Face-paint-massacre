@@ -25,6 +25,8 @@ public class World {
 
 	private HashMap<Integer, Player> others = new HashMap<>();
 	private Player player;
+	public int playerCount = 1;
+	public int readyCount = 0;
 	private ArrayList<Note> notes = new ArrayList<>();
 
 	private Chunk[][] chunks;
@@ -234,5 +236,9 @@ public class World {
 
 	public void setMurdererChosen(final boolean murdererChosen) {
 		this.murdererChosen = murdererChosen;
+	}
+
+	public void setImage(Image img) {
+		player.setImage(img);
 	}
 }

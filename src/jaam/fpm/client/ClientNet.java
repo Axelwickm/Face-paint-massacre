@@ -70,13 +70,17 @@ public class ClientNet {
                 else if (object instanceof NewPlayerPacket){ // Other player added
                     System.out.println("Connection id: "+((NewPlayerPacket) object).connection_id);
                     world.addPlayer(((NewPlayerPacket) object).connection_id, new Player(world, false));
+                    world.playerCount++;
                 }
                 else if (object instanceof PlayerActionPacket){ // Action from other player
                     PlayerActionPacket p = (PlayerActionPacket) object;
                     switch (p.action) {
                         case READY:
-                            // Do we care?
+                            world.readyCount++;
+                            System.out.println(world.readyCount+" / "+world.playerCount+" players ready.");
                             world.getPlayer(p.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
+
+                            world.getPlayer(p.connection_id).decodeImage(p.drawing);
                             break;
                         case DIE:
                             world.getOthers().get(p.connection_id).kill();

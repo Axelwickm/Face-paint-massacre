@@ -19,6 +19,8 @@ public class LaunchClient {
 		{
 			playState = new PlayState("Face paint massacre", clientNet.client);
 			appgc = new AppGameContainer(playState);
+			appgc.setIcon("res/texture/icon_32x32.png");
+
 			appgc.setDisplayMode(Settings.SCREEN_WIDTH, Settings.SCREEN_HEIGHT, false);
 			appgc.start();
 		}

@@ -78,7 +78,8 @@ public class ClientManager extends Listener {
             switch (((PlayerActionPacket) object).action) {
                 case READY:
                     playState.playerReady(connection.getID());
-                    Image img;
+                    System.out.println("wat" + packet.drawing.length);
+                    /*Image img;
 
                     int numNonZeroBytes = 0;
                     for (int i = 0; i < packet.drawing.length; ++i) {
@@ -90,7 +91,7 @@ public class ClientManager extends Listener {
                         out.write(packet.drawing);
                     } catch (IOException ex) {
                         // TODO: Actually, do we even want to do this?
-                    }
+                    }*/
 
                     break;
                 case DIE:

@@ -7,10 +7,13 @@ import jaam.fpm.shared.Tile;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.ImageBuffer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.Image;
 
 import java.awt.*;
 
@@ -41,6 +44,10 @@ public class Player implements KeyListener {
 	private Weapon weapon;
 
 	private TrueTypeFont font;
+
+	private Image image;
+
+	private volatile byte[] imgToDecode;
 
 	public Player(World world) {
 		this(world, true);
@@ -175,10 +182,19 @@ public class Player implements KeyListener {
 	}
 
 	public void render(final Graphics g) {
+		if (world.getMe() != this) {
+			while (imgToDecode == null) { }
+
+			if (image == null) {
+				decodeImage();
+				System.out.println("hej");
+			}
+		}
+
 		g.pushTransform();
 		g.setColor(Color.white);
 		g.translate(position.x, position.y);
-		g.fillRect(- SIZE / 2, - SIZE / 2, SIZE, SIZE);
+		image.draw(- SIZE / 2, - SIZE / 2);
 		weapon.render(g);
 		g.popTransform();
 	}
@@ -269,5 +285,34 @@ public class Player implements KeyListener {
 
     public boolean isDead() {
 		return state == State.DEAD;
+	}
+
+	public void setImage(Image img) {
+		System.out.println(img.getWidth());
+		this.image = img;
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void decodeImage(byte[] data) {
+		imgToDecode = data;
+	}
+
+	private void decodeImage() {
+		byte[] data = imgToDecode;
+		ImageBuffer ib = new ImageBuffer(Player.SIZE, Player.SIZE);
+		for (int i = 0; i < data.length; i += 4) {
+			int r = data[i + 0];
+			int g = data[i + 1];
+			int b = data[i + 2];
+			int a = data[i + 3];
+
+			System.out.println(r + " "+ g+ " " +b +" "+ a);
+
+			ib.setRGBA((i / 4) % Player.SIZE, Math.floorDiv((i / 4), Player.SIZE), r, g, b, a);
+		}
+		image = ib.getImage();
 	}
 }
