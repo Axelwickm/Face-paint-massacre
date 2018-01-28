@@ -94,7 +94,7 @@ public class ClientNet {
                             break;
                         case POST_NOTE:
 							System.err.println("Someone drew a note!");
-                            //world.addNote(new Vector2f(p.notePosition[0], p.notePosition[1]));
+                            world.addNote(p.drawing, new Vector2f(p.notePosition[0], p.notePosition[1]));
                             break;
 						case USE_WEAPON:
 							world.getOthers().get(p.connection_id).getWeapon().use();

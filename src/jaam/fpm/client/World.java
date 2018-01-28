@@ -208,7 +208,7 @@ public class World {
 	public void addPlayer(int id, Player player) {
 		others.put(id, player);
 	}
-	public void addNote(Image img, Vector2f pos){ notes.add(new Note(img, pos)); }
+	public void addNote(byte[] img, Vector2f pos){ notes.add(new Note(img, pos)); }
 
 	public Client getClient() {
 		return client;
