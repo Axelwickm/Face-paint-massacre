@@ -29,8 +29,7 @@ public class PlayState {
     public HashMap<Integer, Player> players;
     public int playerCount;
     public int aliveCount;
-
-    private HashMap<Vector2f, byte[]> notes = new HashMap<>();
+    public int murdererCount;
 
     public PlayState() {
         players = new HashMap<>();
@@ -73,13 +72,18 @@ public class PlayState {
     private boolean update(double delta){
         if (!drawingMode){
             this.aliveCount = 0;
+            this.murdererCount = 0;
             for (Player  p : players.values()){
                 p.update(delta);
                 this.aliveCount += p.state == State.AlIVE ? 1 : 0;
+                this.murdererCount += p.state == State.MURDERER ? 1 : 0;
             }
 
-            if (aliveCount == 0 && 1 < playerCount && false){
+            if (aliveCount == 0 && 1 < playerCount && Settings.MURDERER_CHOOSEN_AFTER < ticks){
                 gameOver("The murderer has completed the FACE PAINT MASSACRE");
+            }
+            else if (murdererCount == 0 && 1 < playerCount && Settings.MURDERER_CHOOSEN_AFTER < ticks){
+                gameOver("The murderer has been thwarted.");
             }
 
             if (ticks == Settings.MURDERER_CHOOSEN_AFTER){
@@ -128,8 +132,7 @@ public class PlayState {
             player.sendGameStatusChange(p);
         }
 
-        ticks = - Settings.ROUND_RESTART_TIME;
-        restartGame();
+        ticks = - Settings.ROUND_RESTART_TIME*1000;
     }
 
     public void addPlayer(Player player){
@@ -148,7 +151,9 @@ public class PlayState {
         players.get(player_id).setVelocity(new Vector2f(0,0));
     }
 
-    public void placeNote(Vector2f location, byte[] image) { notes.put(location, image); }
+    public void killPlayer(int player_id){
+        players.get(player_id).state = State.DEAD;
+    }
 
     public void chooseMurderer(){
         System.out.println("Choosing murderer");

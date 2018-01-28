@@ -93,6 +93,9 @@ public class ClientManager extends Listener {
                     }
 
                     break;
+                case DIE:
+                    playState.killPlayer(connection.getID());
+                    break;
                 case START_WALKING:
                     playState.startMovingPlayer(connection.getID(), new Vector2f(((PlayerActionPacket) object).velocity[0],
 																				 ((PlayerActionPacket) object).velocity[1]));
@@ -101,7 +104,6 @@ public class ClientManager extends Listener {
                     playState.stopMovingPlayer(connection.getID());
                     break;
                 case POST_NOTE:
-                    playState.placeNote(playState.players.get(connection.getID()).getPosition(), packet.drawing);
                     break;
 				case USE_WEAPON:
 				case TOGGLE_WEAPON:

@@ -115,8 +115,13 @@ public class Player implements KeyListener {
 	@Override public void inputEnded() { }
 
 	public void update(final GameContainer gameContainer, final int dt) {
-		if (health <= 0)
+		if (health <= 0 && (state == State.AlIVE || state == State.MURDERER)){
+			kill();
+		}
+
+		if (state == State.DEAD){
 			return;
+		}
 
 		// Move
 		if (dir.lengthSquared() != 0) {
@@ -159,6 +164,15 @@ public class Player implements KeyListener {
 		g.fillRect(- SIZE / 2, - SIZE / 2, SIZE, SIZE);
 		weapon.render(g);
 		g.popTransform();
+	}
+
+	public void kill(){
+		if (this == world.getMe()){
+			System.out.println("I died.");
+			PlayerActionPacket p = PlayerActionPacket.make(PlayerActionPacket.Action.DIE);
+			world.getClient().sendTCP(p);
+		}
+		state = State.DEAD;
 	}
 
 	public int getChunkX() {

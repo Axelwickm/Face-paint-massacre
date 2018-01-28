@@ -72,6 +72,9 @@ public class ClientNet {
                             // Do we care?
                             world.getPlayer(p.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
                             break;
+                        case DIE:
+                            world.getOthers().get(p.connection_id).kill();
+                            break;
                         case START_WALKING:
 							world.getOthers().get(p.connection_id).setDir(new Vector2f(p.velocity[0], p.velocity[1]));
                             break;

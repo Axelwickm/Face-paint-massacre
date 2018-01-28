@@ -22,6 +22,7 @@ public class PlayerActionPacket {
 
     public enum Action {
         READY,
+        DIE,
 
         START_WALKING,
         STOP_WALKING,
