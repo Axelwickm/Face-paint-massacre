@@ -45,7 +45,8 @@ public class PlayState {
 
         drawingMode = true;
         GameStatusChangePacket p = GameStatusChangePacket.make(RESTART_GAME);
-        for (Player player : players.values()){
+        for (Player  player : players.values()){
+            player.ready = false;
             player.sendGameStatusChange(p);
         }
     }
@@ -79,10 +80,10 @@ public class PlayState {
                 this.murdererCount += p.state == State.MURDERER ? 1 : 0;
             }
 
-            if (aliveCount == 0 && 1 < playerCount && Settings.MURDERER_CHOOSEN_AFTER < ticks){
+            if (aliveCount == 0 && 1 < playerCount && Settings.MURDERER_CHOOSEN_AFTER + 1 < ticks){
                 gameOver("The murderer has completed the FACE PAINT MASSACRE");
             }
-            else if (murdererCount == 0 && 1 < playerCount && Settings.MURDERER_CHOOSEN_AFTER < ticks){
+            else if (murdererCount == 0 && 1 < playerCount && Settings.MURDERER_CHOOSEN_AFTER + 1 < ticks){
                 gameOver("The murderer has been thwarted.");
             }
 
@@ -132,7 +133,7 @@ public class PlayState {
             player.sendGameStatusChange(p);
         }
 
-        ticks = - Settings.ROUND_RESTART_TIME*1000;
+        ticks = - Settings.ROUND_RESTART_TIME;
     }
 
     public void addPlayer(Player player){

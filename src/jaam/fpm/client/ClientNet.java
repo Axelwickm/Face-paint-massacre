@@ -5,12 +5,17 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import jaam.fpm.packet.*;
+import jaam.fpm.shared.Settings;
 import jaam.fpm.shared.State;
 import jaam.fpm.shared.Tile;
+import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientNet {
 
@@ -103,8 +108,7 @@ public class ClientNet {
                             System.out.println(p.winners);
                             break;
                         case RESTART_GAME:
-                            System.out.println("(Re)start game");
-
+                            LaunchClient.getPlayState().shouldRestart = true;
                             break;
                         case MURDERER_CHOOSEN:
                             world.getMe().setState(p.IAmTheMurderer ? State.MURDERER : State.AlIVE);
