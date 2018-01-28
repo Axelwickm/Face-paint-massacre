@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MapGenerator {
-    public static final int ROOMS_PER_PLAYER = 2;
-    public static final int CORRIDORS_PER_PLAYER = 2;
-    public static final float UNITS_PER_PLAYER = 7;
+    public static final int ROOMS_PER_PLAYER = 3;
+    public static final int CORRIDORS_PER_PLAYER = 3;
+    public static final float UNITS_PER_PLAYER = 10;
 
     public static ArrayList<Float[]> positions;
 
