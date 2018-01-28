@@ -79,7 +79,7 @@ public class Drawing extends Image {
         if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
             mouseButtonDown = true;
 			Point pt = getMouseLocationInImage(gc);
-			
+
 			if (isPointWithinDrawing(gc, pt)) {
 
 
@@ -158,6 +158,6 @@ public class Drawing extends Image {
     }
 
     public Image getImage() {
-    	return prototype.getScaledCopy(Player.SIZE, Player.SIZE);
+    	return prototype.copy();
 	}
 }

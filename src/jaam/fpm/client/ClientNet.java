@@ -78,7 +78,7 @@ public class ClientNet {
                         case READY:
                             world.readyCount++;
                             System.out.println(world.readyCount+" / "+world.playerCount+" players ready.");
-                            world.getPlayer(p.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
+                            //world.getPlayer(p.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
 
                             world.getPlayer(p.connection_id).decodeImage(p.drawing);
                             break;

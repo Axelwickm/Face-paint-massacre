@@ -302,7 +302,7 @@ public class Player implements KeyListener {
 
 	private void decodeImage() {
 		byte[] data = imgToDecode;
-		ImageBuffer ib = new ImageBuffer(Player.SIZE, Player.SIZE);
+		ImageBuffer ib = new ImageBuffer(256, 256);
 		for (int i = 0; i < data.length; i += 4) {
 			int r = data[i + 0];
 			int g = data[i + 1];
@@ -311,8 +311,8 @@ public class Player implements KeyListener {
 
 			System.out.println(r + " "+ g+ " " +b +" "+ a);
 
-			ib.setRGBA((i / 4) % Player.SIZE, Math.floorDiv((i / 4), Player.SIZE), r, g, b, a);
+			ib.setRGBA((i / 4) % 256, Math.floorDiv((i / 4), 256), r, g, b, a);
 		}
-		image = ib.getImage();
+		image = ib.getImage().getScaledCopy(Player.SIZE, Player.SIZE);
 	}
 }

@@ -63,7 +63,7 @@ public class PlayState extends BasicGame
 			}
 			Image img = ((Drawing) lastImage).getImage();
 			packet.drawing = exportImageData(img);
-			world.getMe().setImage(img);
+			world.getMe().setImage(img.getScaledCopy(Player.SIZE, Player.SIZE));
 			client.sendTCP(packet);
 			if (facepaintMode) facepaintMode = false;
 
@@ -82,18 +82,16 @@ public class PlayState extends BasicGame
 	}
 
 	public static final byte[] exportImageData(Image img) throws SlickException {
-		byte[] array = new byte[Player.SIZE * Player.SIZE * 4];
+		byte[] array = new byte[256 * 256 * 4];
 
 		for (int i = 0; i < img.getHeight(); i++) {
 			for (int j = 0; j < img.getWidth(); j++) {
-				array[(i * img.getWidth() + j) * 4 + 0] = (img.getColor(j, i).getRed()) != 0 ? (byte) 1 : (byte) 0;
-				array[(i * img.getWidth() + j) * 4 + 1] = (img.getColor(j, i).getGreen()) != 0 ? (byte) 1 : (byte) 0;
-				array[(i * img.getWidth() + j) * 4 + 2] = (img.getColor(j, i).getBlue()) != 0 ? (byte) 1 : (byte) 0;
-				array[(i * img.getWidth() + j) * 4 + 3] = (img.getColor(j, i).getAlpha()) != 0 ? (byte) 1 : (byte) 0;
+				array[(i * img.getWidth() + j) * 4 + 0] = (byte) (img.getColor(j, i).getRedByte());
+				array[(i * img.getWidth() + j) * 4 + 1] = (byte) (img.getColor(j, i).getGreenByte());
+				array[(i * img.getWidth() + j) * 4 + 2] = (byte) (img.getColor(j, i).getBlueByte());
+				array[(i * img.getWidth() + j) * 4 + 3] = (byte) (img.getColor(j, i).getAlphaByte());
 			}
 		}
-
-		for(byte b : array) {if (b!=0) System.out.println("YAY!");}
 
 		return array;
 	}
