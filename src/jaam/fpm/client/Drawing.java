@@ -57,7 +57,6 @@ public class Drawing extends Image {
     boolean mouseButtonDown = false;
     Image undoBuffer;
 
-    boolean dangerZone = false;
     public void update(GameContainer gc, int i) throws SlickException {
         if (!isActive) {
         	return;
@@ -78,7 +77,7 @@ public class Drawing extends Image {
             mouseButtonDown = true;
 			Point pt = getMouseLocationInImage(gc);
 
-        	for (int dx = -brushSize; dx <= brushSize; ++dx) {
+        	/*for (int dx = -brushSize; dx <= brushSize; ++dx) {
 				//if (pt.x + dx < 0) continue;
 				//if (pt.x + dx >= getWidth()) break;
 				for (int dy = -brushSize; dy <= brushSize; ++dy) {
@@ -88,13 +87,13 @@ public class Drawing extends Image {
 
 					g.fillRect(pt.x + dx, pt.y + dy, 1, 1);
 				}
-			}
+			}*/
 
 			// Let's try this instead, just to see what happens
-			/*if (isPointWithinDrawing(gc, new Point(pt.x, pt.y))) {
+			if (isPointWithinDrawing(gc, new Point(pt.x, pt.y))) {
 				g.fillRect(pt.x - brushSize, pt.y - brushSize, 1 + 2 * brushSize, 1 + 2 * brushSize);
 				//paintedAnywhere = true;
-			}*/
+			}
         }
 
         if (input.isKeyPressed(KeyConfig.NEXT_COLOR)) {
@@ -108,8 +107,10 @@ public class Drawing extends Image {
         } else if (input.isKeyPressed(KeyConfig.SMALLER_BRUSH)) {
             if (--brushSize < MINIMUM_BRUSH_SIZE) brushSize = MINIMUM_BRUSH_SIZE;
         } else if (input.isKeyPressed(KeyConfig.UNDO)){
-            g.clear();
-            g.drawImage(undoBuffer, 0, 0); // Not drawing <----
+        	if (undoBuffer != null) {
+				g.clear();
+				g.drawImage(undoBuffer, 0, 0); // Not drawing <----
+			}
         }
 
         g.flush();
