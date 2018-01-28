@@ -73,6 +73,9 @@ public class ClientNet {
                             // Do we care?
                             world.getPlayer(p.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
                             break;
+                        case DIE:
+                            world.getOthers().get(p.connection_id).kill();
+                            break;
                         case START_WALKING:
 							world.getOthers().get(p.connection_id).setDir(new Vector2f(p.velocity[0], p.velocity[1]));
                             break;
@@ -81,7 +84,7 @@ public class ClientNet {
 							world.getOthers().get(p.connection_id).setPosition(new Vector2f(p.stopPosition[0], p.stopPosition[1]));
                             break;
                         case POST_NOTE:
-                            world.addNote(new Vector2f(p.notePosition[0], p.notePosition[1]));
+                            //world.addNote(new Vector2f(p.notePosition[0], p.notePosition[1]));
                             break;
 						case USE_WEAPON:
 							world.getOthers().get(p.connection_id).getWeapon().use();
@@ -98,17 +101,20 @@ public class ClientNet {
                     GameStatusChangePacket p = (GameStatusChangePacket) object;
                     switch (p.statusChange){
                         case GAME_OVER:
-                            System.out.println(p.winners);
+                            world.prompt(p.murderWin ? "THE FACEPAIN MASSARE IS COMPLETE" : "THE MURDERER HAS BEEN THWARTED",
+                                         p.murderWin ? Color.red : Color.green);
                             break;
                         case RESTART_GAME:
                             System.out.println("(Re)start game");
 
                             break;
                         case MURDERER_CHOOSEN:
+                        	world.setMurdererChosen(true);
                             world.getMe().setState(p.IAmTheMurderer ? State.MURDERER : State.AlIVE);
                             world.prompt("I am "+(p.IAmTheMurderer ? "" : "not ")+"the murderer.",
                                          p.IAmTheMurderer ? Color.red : Color.white);
-                            Audio.setMusicPitch();
+                            if (p.IAmTheMurderer)
+                            	Audio.setMusicPitch();
                             break;
                     }
                 }

@@ -45,6 +45,8 @@ public class World {
 	private TrueTypeFont promptFont;
 	private Color promptColor;
 
+	private boolean murdererChosen = false;
+
 	public World(Client client) {
 		this.client = client;
 		player = new Player(this);
@@ -58,7 +60,7 @@ public class World {
 	public void init(final GameContainer gc) {
 		gc.getInput().addKeyListener(player);
 
-		Font font = new Font("serif", Font.BOLD, 50);
+		Font font = new Font("serif", Font.BOLD, 32);
 		promptFont = new TrueTypeFont(font, true);
 
 		try {
@@ -97,7 +99,11 @@ public class World {
 
 		player.update(gc, dt);
 
-		camera.update(player.getPosition(), dt);
+		for (Note n : notes){
+			n.update(gc, dt);
+		}
+
+		camera.update(player.isDead() ? player.getSpecPosition() : player.getPosition(), dt);
 
 		if (promptCounter > 0) {
 			promptCounter -= dt;
@@ -122,14 +128,19 @@ public class World {
 			}
 		}
 
+		for (Note n : notes) {
+			n.render(g);
+		}
+
 		for (Player p : others.values()) {
 			p.render(g);
 		}
 
 		player.render(g);
 
-		fogOfWar.draw(camera.getPosition().x - Settings.SCREEN_WIDTH / 2,
-					  camera.getPosition().y - Settings.SCREEN_HEIGHT / 2);
+		if (!player.isDead())
+			fogOfWar.draw(camera.getPosition().x - Settings.SCREEN_WIDTH / 2,
+						  camera.getPosition().y - Settings.SCREEN_HEIGHT / 2);
 
 		player.renderHUD(g);
 
@@ -195,7 +206,7 @@ public class World {
 	public void addPlayer(int id, Player player) {
 		others.put(id, player);
 	}
-	public void addNote(Vector2f pos){ notes.add(new Note(pos)); }
+	public void addNote(Image img, Vector2f pos){ notes.add(new Note(img, pos)); }
 
 	public Client getClient() {
 		return client;
@@ -215,5 +226,13 @@ public class World {
 		promptMSG = msg;
 		promptCounter = PROMPT_DURATION;
 		promptColor = color;
+	}
+
+	public boolean isMurdererChosen() {
+		return murdererChosen;
+	}
+
+	public void setMurdererChosen(final boolean murdererChosen) {
+		this.murdererChosen = murdererChosen;
 	}
 }

@@ -7,7 +7,7 @@ public class GameStatusChangePacket {
 
     public StatusChange statusChange;
     public boolean IAmTheMurderer;
-    public String winners;
+    public boolean murderWin;
 
 
     public static GameStatusChangePacket make(StatusChange statusChange){
