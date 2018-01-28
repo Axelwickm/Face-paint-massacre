@@ -17,10 +17,12 @@ public class Drawing extends Image {
     public static final int DRAWING_WIDTH = 256;
     public static final int DRAWING_HEIGHT = 256;
 
-    public static final int MINIMUM_BRUSH_SIZE = 0;
+    public static final int MINIMUM_BRUSH_SIZE = 5;
     public static final int MAXIMUM_BRUSH_SIZE = 9;
 
     private final Image comparison = new Image(DRAWING_WIDTH, DRAWING_HEIGHT);
+
+    private Image prototype = new Image(DRAWING_WIDTH, DRAWING_HEIGHT);
 
     public static final Color[] COLORS = {
             Color.black,
@@ -33,7 +35,7 @@ public class Drawing extends Image {
             Color.white
     };
 
-    private int brushSize = 1;
+    private int brushSize = MINIMUM_BRUSH_SIZE;
 
     public Drawing() throws SlickException {
         super(DRAWING_WIDTH, DRAWING_HEIGHT);
@@ -66,6 +68,7 @@ public class Drawing extends Image {
         Graphics g = getGraphics();
         Input input = gc.getInput();
         g.setColor(COLORS[currentColorIndex]);
+        Graphics pg = prototype.getGraphics();
 
         if (!input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && mouseButtonDown){
             mouseButtonDown = false;
@@ -78,23 +81,21 @@ public class Drawing extends Image {
             mouseButtonDown = true;
 			Point pt = getMouseLocationInImage(gc);
 
-        	for (int dx = -brushSize; dx <= brushSize; ++dx) {
-				//if (pt.x + dx < 0) continue;
-				//if (pt.x + dx >= getWidth()) break;
-				for (int dy = -brushSize; dy <= brushSize; ++dy) {
-					//if (pt.y + dy < 0) continue;
-					//if (pt.y + dy >= getHeight()) break;
-					if (!isPointWithinDrawing(gc, new Point(pt.x + dx, pt.y + dy))) continue;
+			if (isPointWithinDrawing(gc, pt)) {
 
-					g.fillRect(pt.x + dx, pt.y + dy, 1, 1);
-				}
+
+				g.fillRect(pt.x - brushSize / 2, pt.y - brushSize / 2, brushSize, brushSize);
+				pg.setColor(COLORS[currentColorIndex]);
+				pg.fillRect(pt.x - brushSize / 2, pt.y - brushSize / 2, brushSize, brushSize);
+
+				pg.flush();
+
+					// Let's try this instead, just to see what happens
+				/*if (isPointWithinDrawing(gc, new Point(pt.x, pt.y))) {
+					g.fillRect(pt.x - brushSize, pt.y - brushSize, 1 + 2 * brushSize, 1 + 2 * brushSize);
+					//paintedAnywhere = true;
+				}*/
 			}
-
-			// Let's try this instead, just to see what happens
-			/*if (isPointWithinDrawing(gc, new Point(pt.x, pt.y))) {
-				g.fillRect(pt.x - brushSize, pt.y - brushSize, 1 + 2 * brushSize, 1 + 2 * brushSize);
-				//paintedAnywhere = true;
-			}*/
         }
 
         if (input.isKeyPressed(KeyConfig.NEXT_COLOR)) {
@@ -158,4 +159,8 @@ public class Drawing extends Image {
 
         return new Point(mouseX, mouseY);
     }
+
+    public Image getImage() {
+    	return prototype.getScaledCopy(Player.SIZE, Player.SIZE);
+	}
 }

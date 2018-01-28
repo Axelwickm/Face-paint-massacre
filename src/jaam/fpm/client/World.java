@@ -235,4 +235,8 @@ public class World {
 	public void setMurdererChosen(final boolean murdererChosen) {
 		this.murdererChosen = murdererChosen;
 	}
+
+	public void setImage(Image img) {
+		player.setImage(img);
+	}
 }

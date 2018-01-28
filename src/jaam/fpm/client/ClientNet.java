@@ -72,6 +72,8 @@ public class ClientNet {
                         case READY:
                             // Do we care?
                             world.getPlayer(p.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
+
+                            world.getPlayer(p.connection_id).decodeImage(p.drawing);
                             break;
                         case DIE:
                             world.getOthers().get(p.connection_id).kill();

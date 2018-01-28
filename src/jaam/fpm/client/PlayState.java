@@ -7,6 +7,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class PlayState extends BasicGame
 {
@@ -59,7 +60,9 @@ public class PlayState extends BasicGame
 				float[] pos = {world.getMe().getPosition().x, world.getMe().getPosition().y};
 				packet.notePosition = pos;
 			}
-			packet.drawing = exportImageData(lastImage);
+			Image img = ((Drawing) lastImage).getImage();
+			packet.drawing = exportImageData(img);
+			world.getMe().setImage(img);
 			client.sendTCP(packet);
 			if (facepaintMode) facepaintMode = false;
 
@@ -72,14 +75,18 @@ public class PlayState extends BasicGame
 	}
 
 	public static final byte[] exportImageData(Image img) throws SlickException {
-		byte[] array = new byte[Drawing.DRAWING_WIDTH * Drawing.DRAWING_HEIGHT * 4];
-		ByteBuffer bb = ByteBuffer.allocateDirect(Drawing.DRAWING_WIDTH * Drawing.DRAWING_HEIGHT * 4);
-		img.getGraphics().getArea(0, 0, Drawing.DRAWING_WIDTH, Drawing.DRAWING_HEIGHT, bb);
+		byte[] array = new byte[Player.SIZE * Player.SIZE * 4];
 
-		bb.position(0);
-		Graphics g = img.getGraphics();
+		for (int i = 0; i < img.getHeight(); i++) {
+			for (int j = 0; j < img.getWidth(); j++) {
+				array[(i * img.getWidth() + j) * 4 + 0] = (img.getColor(j, i).getRed()) != 0 ? (byte) 1 : (byte) 0;
+				array[(i * img.getWidth() + j) * 4 + 1] = (img.getColor(j, i).getGreen()) != 0 ? (byte) 1 : (byte) 0;
+				array[(i * img.getWidth() + j) * 4 + 2] = (img.getColor(j, i).getBlue()) != 0 ? (byte) 1 : (byte) 0;
+				array[(i * img.getWidth() + j) * 4 + 3] = (img.getColor(j, i).getAlpha()) != 0 ? (byte) 1 : (byte) 0;
+			}
+		}
 
-		bb.get(array, 0, array.length);
+		for(byte b : array) {if (b!=0) System.out.println("YAY!");}
 
 		return array;
 	}
