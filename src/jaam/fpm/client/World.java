@@ -60,9 +60,10 @@ public class World {
 	public void update(final GameContainer gc, final int dt) {
 		if (!populated) {
 			if (tileArrayPacket != null) {
-                System.out.println("Player pos: "+tileArrayPacket.playerPositions[0][0]+" "+tileArrayPacket.playerPositions[0][1]);
-				player.setPosition(new Vector2f(tileArrayPacket.playerPositions[0][0]*Tile.PIXELS,
-						tileArrayPacket.playerPositions[0][1]*Tile.PIXELS
+                System.out.println("Player pos: "+tileArrayPacket.playerPosition[0]+" "+tileArrayPacket.playerPosition[1]);
+				player.setPosition(new Vector2f(
+				        tileArrayPacket.playerPosition[0]*Tile.PIXELS,
+						tileArrayPacket.playerPosition[1]*Tile.PIXELS
 				));
 				createChunks(tileArrayPacket.tilesX, tileArrayPacket.tilesY, tileArrayPacket.tiles);
 
