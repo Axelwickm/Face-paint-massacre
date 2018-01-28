@@ -59,7 +59,6 @@ public class Drawing extends Image {
     boolean mouseButtonDown = false;
     Image undoBuffer;
 
-    boolean dangerZone = false;
     public void update(GameContainer gc, int i) throws SlickException {
         if (!isActive) {
         	return;
@@ -80,7 +79,7 @@ public class Drawing extends Image {
         if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
             mouseButtonDown = true;
 			Point pt = getMouseLocationInImage(gc);
-
+			
 			if (isPointWithinDrawing(gc, pt)) {
 
 
@@ -89,12 +88,6 @@ public class Drawing extends Image {
 				pg.fillRect(pt.x - brushSize / 2, pt.y - brushSize / 2, brushSize, brushSize);
 
 				pg.flush();
-
-					// Let's try this instead, just to see what happens
-				/*if (isPointWithinDrawing(gc, new Point(pt.x, pt.y))) {
-					g.fillRect(pt.x - brushSize, pt.y - brushSize, 1 + 2 * brushSize, 1 + 2 * brushSize);
-					//paintedAnywhere = true;
-				}*/
 			}
         }
 
@@ -109,8 +102,10 @@ public class Drawing extends Image {
         } else if (input.isKeyPressed(KeyConfig.SMALLER_BRUSH)) {
             if (--brushSize < MINIMUM_BRUSH_SIZE) brushSize = MINIMUM_BRUSH_SIZE;
         } else if (input.isKeyPressed(KeyConfig.UNDO)){
-            g.clear();
-            g.drawImage(undoBuffer, 0, 0); // Not drawing <----
+        	if (undoBuffer != null) {
+				g.clear();
+				g.drawImage(undoBuffer, 0, 0); // Not drawing <----
+			}
         }
 
         g.flush();
@@ -128,7 +123,9 @@ public class Drawing extends Image {
 		draw(xpos + translateX, ypos + translateY, scale);
 
 		g.drawString("Brush size: " + brushSize + " (Z and X to change)", 10 + translateX, 30 + translateY);
+		g.setColor(COLORS[currentColorIndex]);
 		g.drawString("Color: " + COLORS[currentColorIndex].toString() + " (Q and E to change)", 10 + translateX, 50 + translateY);
+		g.setColor(Color.white);
 		g.drawString("Press R to finish drawing", 10 + translateX, 70 + translateY);
 	}
 

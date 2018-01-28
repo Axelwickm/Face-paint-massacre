@@ -5,13 +5,18 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import jaam.fpm.packet.*;
+import jaam.fpm.shared.Settings;
 import jaam.fpm.shared.State;
 import jaam.fpm.shared.Tile;
+import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientNet {
 
@@ -65,12 +70,14 @@ public class ClientNet {
                 else if (object instanceof NewPlayerPacket){ // Other player added
                     System.out.println("Connection id: "+((NewPlayerPacket) object).connection_id);
                     world.addPlayer(((NewPlayerPacket) object).connection_id, new Player(world, false));
+                    world.playerCount++;
                 }
                 else if (object instanceof PlayerActionPacket){ // Action from other player
                     PlayerActionPacket p = (PlayerActionPacket) object;
                     switch (p.action) {
                         case READY:
-                            // Do we care?
+                            world.readyCount++;
+                            System.out.println(world.readyCount+" / "+world.playerCount+" players ready.");
                             world.getPlayer(p.connection_id)/*.setFace(packet.drawing) /* TODO: Store player faces locally too */;
 
                             world.getPlayer(p.connection_id).decodeImage(p.drawing);
@@ -103,12 +110,11 @@ public class ClientNet {
                     GameStatusChangePacket p = (GameStatusChangePacket) object;
                     switch (p.statusChange){
                         case GAME_OVER:
-                            world.prompt(p.murderWin ? "THE FACEPAIN MASSARE IS COMPLETE" : "THE MURDERER HAS BEEN THWARTED",
+                            world.prompt(p.murderWin ? "THE FACEPAINT MASSARE IS COMPLETE" : "THE MURDERER HAS BEEN THWARTED",
                                          p.murderWin ? Color.red : Color.green);
                             break;
                         case RESTART_GAME:
-                            System.out.println("(Re)start game");
-
+                            LaunchClient.getPlayState().shouldRestart = true;
                             break;
                         case MURDERER_CHOOSEN:
                         	world.setMurdererChosen(true);

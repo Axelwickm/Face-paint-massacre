@@ -10,13 +10,17 @@ import java.util.logging.Logger;
 public class LaunchClient {
 
 	private static AppGameContainer appgc;
+	private static PlayState playState;
 	private static ClientNet clientNet;
 
 	public static void main(String[] args) {
 		clientNet = new ClientNet();
 		try
 		{
-			appgc = new AppGameContainer(new PlayState("Simple Slick Game", clientNet.client));
+			playState = new PlayState("Face paint massacre", clientNet.client);
+			appgc = new AppGameContainer(playState);
+			appgc.setIcon("res/texture/icon_32x32.png");
+
 			appgc.setDisplayMode(Settings.SCREEN_WIDTH, Settings.SCREEN_HEIGHT, false);
 			appgc.start();
 		}
@@ -32,5 +36,13 @@ public class LaunchClient {
 
 	public static final ClientNet getClientNet() {
 		return clientNet;
+	}
+
+	public static AppGameContainer getAppgc() {
+		return appgc;
+	}
+
+	public static PlayState getPlayState() {
+		return playState;
 	}
 }

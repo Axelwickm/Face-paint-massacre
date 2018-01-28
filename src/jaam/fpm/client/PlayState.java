@@ -3,6 +3,7 @@ package jaam.fpm.client;
 import com.esotericsoftware.kryonet.Client;
 import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.shared.Settings;
+import org.lwjgl.openal.AL;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -18,6 +19,7 @@ public class PlayState extends BasicGame
 	private Image lastImage;
 
 	private boolean facepaintMode = true;
+	public boolean shouldRestart = false;
 
 	public PlayState(String name, Client client) throws SlickException {
 		super(name);
@@ -27,15 +29,13 @@ public class PlayState extends BasicGame
 	@Override
 	public void init(final GameContainer gameContainer) throws SlickException {
 		System.out.println("Init game");
+		System.out.println(client.getKryo());
 		world = new World(client);
 		LaunchClient.getClientNet().world = world;
 		world.init(gameContainer);
 		currentDrawing = new Drawing();
 	}
 
-	public void restartGame(){
-		facepaintMode = true;
-	}
 
 	@Override
 	public void update(final GameContainer gameContainer, final int dt) throws SlickException {
@@ -55,6 +55,7 @@ public class PlayState extends BasicGame
 			if (facepaintMode) {
 				// Send a READY PA-packet and exit facepaint mode
 				packet = PlayerActionPacket.make(PlayerActionPacket.Action.READY);
+				world.readyCount++;
 			} else {
 				packet = PlayerActionPacket.make(PlayerActionPacket.Action.POST_NOTE);
 				float[] pos = {world.getMe().getPosition().x, world.getMe().getPosition().y};
@@ -69,6 +70,12 @@ public class PlayState extends BasicGame
 		}
 		if (!facepaintMode) world.update(gameContainer, dt);
 
+		if (shouldRestart){
+			System.out.println("Restarting game");
+			shouldRestart = false;
+			AL.destroy();
+			gameContainer.reinit();
+		}
 		// Exit
 		if (input.isKeyPressed(KeyConfig.EXIT))
 			LaunchClient.exit();

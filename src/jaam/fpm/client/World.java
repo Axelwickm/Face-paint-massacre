@@ -25,6 +25,8 @@ public class World {
 
 	private HashMap<Integer, Player> others = new HashMap<>();
 	private Player player;
+	public int playerCount = 1;
+	public int readyCount = 0;
 	private ArrayList<Note> notes = new ArrayList<>();
 
 	private Chunk[][] chunks;
