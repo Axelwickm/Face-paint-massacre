@@ -40,6 +40,11 @@ public class PlayState extends BasicGame
 	public void update(final GameContainer gameContainer, final int dt) throws SlickException {
 
 		Input input = gameContainer.getInput();
+
+		if (currentDrawing == null && input.isKeyPressed(KeyConfig.START_DRAWING)) {
+			currentDrawing = new Drawing();
+		}
+
 		if (currentDrawing != null) {
 			currentDrawing.update(gameContainer, dt);
 		}
@@ -58,6 +63,7 @@ public class PlayState extends BasicGame
 				packet = PlayerActionPacket.make(PlayerActionPacket.Action.POST_NOTE);
 				float[] pos = {world.getMe().getPosition().x, world.getMe().getPosition().y};
 				packet.notePosition = pos;
+				System.err.println("Note placed");
 			}
 			packet.drawing = exportImageData(lastImage);
 			client.sendTCP(packet);
@@ -96,17 +102,19 @@ public class PlayState extends BasicGame
 		if (facepaintMode) {
 			graphics.translate(Settings.SCREEN_WIDTH / 2, Settings.SCREEN_HEIGHT / 2);
 
-			if (currentDrawing != null) {
-				Vector2f cameraPos = world.getCameraPosition();
 
-				int dx = (int) ((cameraPos.x - Settings.SCREEN_WIDTH / 2));
-				int dy = (int) ((cameraPos.y - Settings.SCREEN_HEIGHT / 2));
-				currentDrawing.render(gameContainer, graphics, dx, dy);
-
-				currentDrawing.render(gameContainer, graphics, dx, dy);
-			}
 		} else {
 			world.render(graphics);
+		}
+
+		if (currentDrawing != null) {
+			Vector2f cameraPos = world.getCameraPosition();
+
+			int dx = (int) ((cameraPos.x - Settings.SCREEN_WIDTH / 2));
+			int dy = (int) ((cameraPos.y - Settings.SCREEN_HEIGHT / 2));
+			currentDrawing.render(gameContainer, graphics, dx, dy);
+
+			currentDrawing.render(gameContainer, graphics, dx, dy);
 		}
 	}
 
