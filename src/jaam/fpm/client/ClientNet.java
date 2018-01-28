@@ -14,7 +14,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -131,7 +133,12 @@ public class ClientNet {
         });
 
         try {
-            client.connect(5000, "127.0.0.1", 54555, 54777);
+        	Scanner s = new Scanner(new File("ip.conf"));
+
+            client.connect(5000, s.nextLine(), 54555, 54777);
+
+            s.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

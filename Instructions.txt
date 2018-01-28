@@ -1,0 +1,17 @@
+1. Start a server (port 54555 for TCP, port 54777 for UDP)
+
+2. Player must enter server ip in "ip.conf"
+
+3. Start client, paint a face. When all connected players are done, the game will start.
+
+4. After a while, one player will be chosen as murderer.
+
+5. Once your role is announced, you can pull out a knife with 'E' and stab with 'Spacebar'
+
+6. You can draw at anytime using 'Q', to leave NOTES on the map
+
+7. Murderer wins by killing everyone
+
+8. Others win by killing the murderer
+
+TRY COMMUNICATING USING NOTES ONLY!
