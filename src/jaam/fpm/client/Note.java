@@ -11,7 +11,7 @@ public class Note {
     private Image image;
 
     public Note(byte[] image, Vector2f position) {
-        //this.image = image;
+        this.image = decodeImage(image, 256, 256);
         this.position = position;
     }
 
