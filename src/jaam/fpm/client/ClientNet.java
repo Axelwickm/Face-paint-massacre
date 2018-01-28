@@ -73,11 +73,9 @@ public class ClientNet {
                         case READY:
                             // Do we care?
 							Player pl = world.getPlayer(p.connection_id);
-							try {
-								pl.setFace(new Image(new ByteArrayInputStream(p.drawing), null, false, Image.FILTER_NEAREST));
-							} catch (SlickException ex) {
-								throw new RuntimeException("Something went wrong when creating an image from a byte array.", ex);
-							}
+							System.err.println("New player found, storing face image...");
+							pl.setFace(p.drawing);
+
 
                             break;
                         case START_WALKING:

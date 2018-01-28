@@ -79,7 +79,7 @@ public class World {
 		camera.update(player.getPosition(), dt);
 	}
 
-	public void render(final Graphics g) {
+	public void render(final Graphics g) throws SlickException {
 		if (!populated)
 			return;
 

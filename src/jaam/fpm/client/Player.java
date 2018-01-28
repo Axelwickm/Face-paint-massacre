@@ -1,8 +1,10 @@
 package jaam.fpm.client;
 
+import com.esotericsoftware.kryo.NotNull;
 import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.shared.State;
 import jaam.fpm.shared.Tile;
+import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -10,6 +12,14 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureImpl;
+import org.newdawn.slick.util.BufferedImageUtil;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class Player implements KeyListener {
 
@@ -27,16 +37,76 @@ public class Player implements KeyListener {
 
 	private World world;
 
+	private boolean uninitializedFace = true;
+
 	private boolean controllable;
 
-	private Image face;
+	private byte[] face;
+	private transient Image faceImage;
 
-	public Image getFace() {
+	public byte[] getFace() {
+		if (uninitializedFace) throw new RuntimeException("Give Me A Face First");
 		return face;
 	}
 
-	public void setFace(Image face) {
+	public Image getFaceImage() {
+		if (uninitializedFace) throw new RuntimeException("Give Me A Face First");
+		return faceImage;
+	}
+
+	/**
+	 * Gets the face Image of this Player, creating it if it hasn't already been created.
+	 *
+	 * @return the Image representing the face of this Player.
+	 * @throws NullPointerException if this Player doesn't have a face Image or a face byte array yet.
+	 * @throws RuntimeException if the image can't be created because the current thread has no OpenGL context.
+	 * @throws SlickException if creating the Image fails for other reasons.
+	 */
+	public Image makeFaceImage() throws SlickException {
+		if (faceImage != null) return faceImage;
+		if (face == null) throw new NullPointerException("This player has no face.");
+
+		BufferedImage ni = new BufferedImage(Drawing.DRAWING_WIDTH, Drawing.DRAWING_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR_PRE); // TODO: Can I insert things here?
+
+		ni.setRGB(0, 0, ni.getWidth(), ni.getHeight(), face, 0, 1); // TODO: THIS ISN'T WORKING
+
+		ImageBuffer ib = new ImageBuffer(Drawing.DRAWING_WIDTH, Drawing.DRAWING_HEIGHT); // Aproach 2: Doesn't seem to work at all.
+		ib.getImageBufferData().put(face);
+		faceImage = ib.getImage(Image.FILTER_NEAREST);
+
+		//faceImage = new Image(new ByteArrayInputStream(face), "", false, Image.FILTER_NEAREST); // Approach 3: Doesn't seem to work either.
+
+		boolean bar = false;
+		for (int i = 3; i < face.length; i+=4) {
+
+			if (face[i] != 0) {
+				bar = true;
+				break;
+			}
+		}
+		if (bar) System.err.println("The array isn't empty");
+		else System.err.println("The array is empty");
+		boolean foo = false;
+		for (int y = 0; y < faceImage.getHeight() && !foo; ++y) for (int x = 0; !foo && x < faceImage.getWidth(); ++x) {
+			if (faceImage.getColor(x, y).getAlphaByte() != 0) foo = true;
+		}
+		if (foo) System.err.println("The image is not empty");
+		else System.err.println("The image is empty");
+
+		return faceImage;
+	}
+
+	public void setFace(byte[] face) {
+		if (face == null) throw new IllegalArgumentException("FACE ME!");
+		uninitializedFace = false;
 		this.face = face;
+		faceImage = null;
+	}
+
+	public void setFaceImage(Image faceImage) throws SlickException {
+		this.faceImage = faceImage;
+		face = PlayState.exportImageData(faceImage);
+		uninitializedFace = false;
 	}
 
 	private int health = DEFAULT_HEALTH;
@@ -155,12 +225,23 @@ public class Player implements KeyListener {
 		weapon.update(dt);
 	}
 
-	public void render(final Graphics g) {
+	public void render(final Graphics g) throws SlickException {
 		g.pushTransform();
 		g.setColor(Color.white);
 		g.translate(position.x, position.y);
 		g.fillRect(- SIZE / 2, - SIZE / 2, SIZE, SIZE);
 		weapon.render(g);
+
+		if (face != null) {// Don't bother drawing the face if we don't have one.)
+			Image img = makeFaceImage();
+
+			float xScale = (float)Player.SIZE / img.getWidth();
+			float yScale = (float)Player.SIZE / img.getHeight();
+			float scale = Math.min(xScale, yScale);
+
+			img.draw(- SIZE / 2, - SIZE / 2, scale);
+			//img.draw(position.x - SIZE / 2, position.y - SIZE / 2);
+		} else System.err.println("FACELESS ONE");
 		g.popTransform();
 	}
 

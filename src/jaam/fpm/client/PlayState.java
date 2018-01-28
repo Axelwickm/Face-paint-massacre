@@ -63,6 +63,7 @@ public class PlayState extends BasicGame
 			packet.drawing = exportImageData(lastImage);
 			client.sendTCP(packet);
 			if (facepaintMode) facepaintMode = false;
+			world.getMe().setFaceImage(lastImage);
 
 		}
 		if (!facepaintMode) world.update(gameContainer, dt);
@@ -75,19 +76,40 @@ public class PlayState extends BasicGame
 	public static final byte[] exportImageData(Image img) throws SlickException {
 		byte[] array = new byte[Drawing.DRAWING_WIDTH * Drawing.DRAWING_HEIGHT * 4];
 		ByteBuffer bb = ByteBuffer.allocateDirect(Drawing.DRAWING_WIDTH * Drawing.DRAWING_HEIGHT * 4);
-		img.getGraphics().getArea(0, 0, Drawing.DRAWING_WIDTH, Drawing.DRAWING_HEIGHT, bb);
+		Graphics g = img.getGraphics();
+		g.getArea(0, 0, Drawing.DRAWING_WIDTH, Drawing.DRAWING_HEIGHT, bb);
+		g.flush();
 
 		bb.position(0);
-		Graphics g = img.getGraphics();
 
 		bb.get(array, 0, array.length);
 
+		for (int i = 0; i < array.length; ++i) {
+			if (array[i] != 0) {
+				System.err.println("Some byte is nonzero.");
+				return array;
+			}
+		}
+		System.err.println("It's zeroes all the way down.");
 		return array;
 	}
 
 	@Override
 	public void render(final GameContainer gameContainer, final Graphics graphics) throws SlickException {
-
+		/*if (lastImage != null) {
+			if (true || gameContainer.getInput().isKeyPressed(Input.KEY_L)) {
+				boolean anyOpaque = false;
+				outer:for (int y = 0; y < lastImage.getHeight(); ++y) for (int x = 0; x < lastImage.getWidth(); ++x) {
+					System.out.println(lastImage.getColor(x,y).r);
+					if (lastImage.getColor(x, y).getAlphaByte() != 0 && false) {
+						System.err.println("Some pixel is opaque!");
+						break outer;
+					}
+				}
+			}
+			world.getMe().makeFaceImage().draw(0, 0, 1);
+			//return;
+		}*/
 		if (facepaintMode) {
 			graphics.translate(Settings.SCREEN_WIDTH / 2, Settings.SCREEN_HEIGHT / 2);
 
