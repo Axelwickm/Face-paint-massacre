@@ -13,7 +13,7 @@ public class Note {
 
     public Note(byte[] image, Vector2f position) {
         this.image = decodeImage(image, 256, 256);
-        this.position = position.copy();
+        this.position = position.copy().add(new Vector2f(-100, -50));
     }
 
     public void update(final GameContainer gameContainer, final int dt) {

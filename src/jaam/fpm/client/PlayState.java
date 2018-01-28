@@ -138,9 +138,9 @@ public class PlayState extends BasicGame
 
 			int dx = (int) ((cameraPos.x - Settings.SCREEN_WIDTH / 2));
 			int dy = (int) ((cameraPos.y - Settings.SCREEN_HEIGHT / 2));
-			currentDrawing.render(gameContainer, graphics, dx, dy);
+			currentDrawing.render(gameContainer, graphics, dx, dy, facepaintMode);
 
-			currentDrawing.render(gameContainer, graphics, dx, dy);
+			//currentDrawing.render(gameContainer, graphics, dx, dy);
 
 			graphics.drawString("Ready: " + world.readyCount + "/" + world.playerCount,
 								cameraPos.x - Settings.SCREEN_WIDTH / 2 + 25,

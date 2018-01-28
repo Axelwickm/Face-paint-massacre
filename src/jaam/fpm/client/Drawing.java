@@ -111,7 +111,7 @@ public class Drawing extends Image {
         g.flush();
     }
 
-    public void render(final GameContainer gc, final Graphics g, final int translateX, final int translateY) {
+    public void render(final GameContainer gc, final Graphics g, final int translateX, final int translateY, boolean note) {
 		float wscale = gc.getWidth() / (float)getWidth();
 		float hscale = gc.getHeight() / (float)getHeight();
 		float scale = Math.min(wscale, hscale);
@@ -119,7 +119,12 @@ public class Drawing extends Image {
 		int xpos = (gc.getWidth() - (int)(scale * getWidth())) / 2;
 		int ypos = (gc.getHeight() - (int)(scale * getHeight())) / 2;
 
-		comparison.draw(xpos + translateX, ypos + translateY, scale);
+        g.setBackground(Color.white);
+
+		if (note){
+		    g.setBackground(Color.black);
+		    comparison.draw(xpos + translateX, ypos + translateY, scale);
+        }
 		draw(xpos + translateX, ypos + translateY, scale);
 
 		g.drawString("Brush size: " + brushSize + " (X and C to change)", 10 + translateX, 30 + translateY);
