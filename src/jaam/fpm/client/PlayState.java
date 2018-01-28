@@ -88,7 +88,7 @@ public class PlayState extends BasicGame
 	}
 
 	public static final byte[] exportImageData(Image img) throws SlickException {
-		byte[] array = new byte[256 * 256 * 4];
+		byte[] array = new byte[img.getWidth() * img.getHeight() * 4];
 
 		for (int i = 0; i < img.getHeight(); i++) {
 			for (int j = 0; j < img.getWidth(); j++) {
@@ -100,6 +100,21 @@ public class PlayState extends BasicGame
 		}
 
 		return array;
+	}
+
+	public static Image importImageData(byte[] data, int width, int height) throws SlickException {
+		Image img = new Image(width, height);
+		Graphics g = img.getGraphics();
+		for (int y = 0; y < height; ++y) {
+			for (int x = 0; x < width; ++x) {
+				g.setColor(new Color(data[4 * (width * y + x)],
+						data[4 * (width * y + x) + 1],
+						data[4 * (width * y + x) + 2],
+						data[4 * (width * y + x) + 3]));
+				g.fillRect(x, y, 1, 1);
+			}
+		}
+		return img;
 	}
 
 	@Override

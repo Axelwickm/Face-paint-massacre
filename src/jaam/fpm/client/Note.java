@@ -20,7 +20,10 @@ public class Note {
     }
 
     public void render(final Graphics g) {
-
+        g.pushTransform();
+        g.resetTransform();
+        g.drawImage(image, position.x, position.y);
+        g.popTransform();
     }
 
     public Vector2f getPosition() {
