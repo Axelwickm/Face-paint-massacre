@@ -83,6 +83,10 @@ public class World {
 
 		player.update(gc, dt);
 
+		for (Note n : notes){
+			n.update(gc, dt);
+		}
+
 		camera.update(player.getPosition(), dt);
 	}
 
@@ -99,6 +103,10 @@ public class World {
 				renderChunk(j - Player.VIEW_RADIUS + player.getChunkX(),
 							i - Player.VIEW_RADIUS + player.getChunkY());
 			}
+		}
+
+		for (Note n : notes) {
+			n.render(g);
 		}
 
 		for (Player p : others.values()) {
@@ -168,7 +176,7 @@ public class World {
 	public void addPlayer(int id, Player player) {
 		others.put(id, player);
 	}
-	public void addNote(Vector2f pos){ notes.add(new Note(pos)); }
+	public void addNote(Image img, Vector2f pos){ notes.add(new Note(img, pos)); }
 
 	public Client getClient() {
 		return client;
