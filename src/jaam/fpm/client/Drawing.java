@@ -54,7 +54,8 @@ public class Drawing extends Image {
     }
 
     int currentColorIndex;
-
+    boolean mouseButtonDown = false;
+    Image undoBuffer;
 
     boolean dangerZone = false;
     public void update(GameContainer gc, int i) throws SlickException {
@@ -66,8 +67,15 @@ public class Drawing extends Image {
         Input input = gc.getInput();
         g.setColor(COLORS[currentColorIndex]);
 
+        if (!input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && mouseButtonDown){
+            mouseButtonDown = false;
+            undoBuffer = this.getScaledCopy(1.f);
+        }
+
+
         //boolean paintedAnywhere = false;
         if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+            mouseButtonDown = true;
 			Point pt = getMouseLocationInImage(gc);
 
         	for (int dx = -brushSize; dx <= brushSize; ++dx) {
@@ -89,9 +97,6 @@ public class Drawing extends Image {
 			}*/
         }
 
-
-        g.flush();
-
         if (input.isKeyPressed(KeyConfig.NEXT_COLOR)) {
             if (++currentColorIndex >= COLORS.length) currentColorIndex = 0;
             System.out.println("Switched to next color (" + COLORS[currentColorIndex].toString() + ").");
@@ -102,7 +107,12 @@ public class Drawing extends Image {
             if (++brushSize > MAXIMUM_BRUSH_SIZE) brushSize = MAXIMUM_BRUSH_SIZE;
         } else if (input.isKeyPressed(KeyConfig.SMALLER_BRUSH)) {
             if (--brushSize < MINIMUM_BRUSH_SIZE) brushSize = MINIMUM_BRUSH_SIZE;
+        } else if (input.isKeyPressed(KeyConfig.UNDO)){
+            g.clear();
+            g.drawImage(undoBuffer, 0, 0); // Not drawing <----
         }
+
+        g.flush();
     }
 
     public void render(final GameContainer gc, final Graphics g, final int translateX, final int translateY) {
