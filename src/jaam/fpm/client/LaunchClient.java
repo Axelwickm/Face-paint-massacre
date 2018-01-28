@@ -1,5 +1,6 @@
 package jaam.fpm.client;
 
+import jaam.fpm.shared.Settings;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 

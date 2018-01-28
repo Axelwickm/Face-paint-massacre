@@ -2,6 +2,7 @@ package jaam.fpm.client;
 
 import com.esotericsoftware.kryonet.Client;
 import jaam.fpm.packet.TileArrayPacket;
+import jaam.fpm.shared.Settings;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;

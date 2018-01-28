@@ -1,15 +1,12 @@
 package jaam.fpm.client;
 
 import com.esotericsoftware.kryonet.Client;
-import jaam.fpm.client.Drawing;
 import jaam.fpm.packet.PlayerActionPacket;
+import jaam.fpm.shared.Settings;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.opengl.ImageData;
 
-import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
-import java.util.logging.Logger;
 
 public class PlayState extends BasicGame
 {
