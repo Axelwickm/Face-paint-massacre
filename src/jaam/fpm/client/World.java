@@ -4,16 +4,22 @@ import com.esotericsoftware.kryonet.Client;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Settings;
 import jaam.fpm.shared.Tile;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Vector2f;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class World {
+
+	public static final int PROMPT_DURATION = 5000;
+	public static final int PROMPT_OFFSET = -100;
 
 	private Camera camera;
 
@@ -34,6 +40,13 @@ public class World {
 
 	private Client client;
 
+	private String promptMSG;
+	private int promptCounter;
+	private TrueTypeFont promptFont;
+	private Color promptColor;
+
+	private boolean murdererChosen = false;
+
 	public World(Client client) {
 		this.client = client;
 		player = new Player(this);
@@ -46,6 +59,9 @@ public class World {
 
 	public void init(final GameContainer gc) {
 		gc.getInput().addKeyListener(player);
+
+		Font font = new Font("serif", Font.BOLD, 32);
+		promptFont = new TrueTypeFont(font, true);
 
 		try {
 			background = new Image("res/texture/bg.png");
@@ -87,7 +103,14 @@ public class World {
 			n.update(gc, dt);
 		}
 
-		camera.update(player.getPosition(), dt);
+		camera.update(player.isDead() ? player.getSpecPosition() : player.getPosition(), dt);
+
+		if (promptCounter > 0) {
+			promptCounter -= dt;
+			if (promptCounter <= 0) {
+				promptCounter = 0;
+			}
+		}
 	}
 
 	public void render(final Graphics g) {
@@ -115,8 +138,17 @@ public class World {
 
 		player.render(g);
 
-		fogOfWar.draw(camera.getPosition().x - Settings.SCREEN_WIDTH / 2,
-					  camera.getPosition().y - Settings.SCREEN_HEIGHT / 2);
+		if (!player.isDead())
+			fogOfWar.draw(camera.getPosition().x - Settings.SCREEN_WIDTH / 2,
+						  camera.getPosition().y - Settings.SCREEN_HEIGHT / 2);
+
+		player.renderHUD(g);
+
+		if (promptCounter > 0) {
+			promptFont.drawString(camera.getPosition().x - promptFont.getWidth(promptMSG) / 2.0f,
+								  camera.getPosition().y - promptFont.getHeight() / 2.0f + PROMPT_OFFSET,
+								  promptMSG, promptColor);
+		}
 	}
 
 	public Tile getTile(int cx, int cy, int tx, int ty) {
@@ -154,8 +186,6 @@ public class World {
 
 		chunks = new Chunk[chunksY][chunksX];
 
-		System.out.println(tiles);
-
 		for (int cy = 0; cy < chunksY; cy++) {
 			for (int cx = 0; cx < chunksX; cx++) {
 				Tile[][] chunkTiles = new Tile[Chunk.SIZE][Chunk.SIZE];
@@ -187,4 +217,22 @@ public class World {
 	}
 	public Player getPlayer(int id) { return others.get(id); }
 	public Player getMe() { return player; }
+
+	public void prompt(String msg) {
+		prompt(msg, Color.white);
+	}
+
+	public void prompt(String msg, Color color) {
+		promptMSG = msg;
+		promptCounter = PROMPT_DURATION;
+		promptColor = color;
+	}
+
+	public boolean isMurdererChosen() {
+		return murdererChosen;
+	}
+
+	public void setMurdererChosen(final boolean murdererChosen) {
+		this.murdererChosen = murdererChosen;
+	}
 }

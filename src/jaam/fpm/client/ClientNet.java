@@ -9,6 +9,7 @@ import jaam.fpm.shared.Settings;
 import jaam.fpm.shared.State;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
@@ -105,14 +106,19 @@ public class ClientNet {
                     GameStatusChangePacket p = (GameStatusChangePacket) object;
                     switch (p.statusChange){
                         case GAME_OVER:
-                            System.out.println(p.winners);
+                            world.prompt(p.murderWin ? "THE FACEPAINT MASSARE IS COMPLETE" : "THE MURDERER HAS BEEN THWARTED",
+                                         p.murderWin ? Color.red : Color.green);
                             break;
                         case RESTART_GAME:
                             LaunchClient.getPlayState().shouldRestart = true;
                             break;
                         case MURDERER_CHOOSEN:
+                        	world.setMurdererChosen(true);
                             world.getMe().setState(p.IAmTheMurderer ? State.MURDERER : State.AlIVE);
-                            System.out.println("I am "+(p.IAmTheMurderer ? "" : "not ")+"the murderer.");
+                            world.prompt("I am "+(p.IAmTheMurderer ? "" : "not ")+"the murderer.",
+                                         p.IAmTheMurderer ? Color.red : Color.white);
+                            if (p.IAmTheMurderer)
+                            	Audio.setMusicPitch();
                             break;
                     }
                 }

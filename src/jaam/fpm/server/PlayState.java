@@ -81,10 +81,10 @@ public class PlayState {
             }
 
             if (aliveCount == 0 && 1 < playerCount && Settings.MURDERER_CHOOSEN_AFTER + 1 < ticks){
-                gameOver("The murderer has completed the FACE PAINT MASSACRE");
+                gameOver(true);
             }
             else if (murdererCount == 0 && 1 < playerCount && Settings.MURDERER_CHOOSEN_AFTER + 1 < ticks){
-                gameOver("The murderer has been thwarted.");
+                gameOver(false);
             }
 
             if (ticks == Settings.MURDERER_CHOOSEN_AFTER){
@@ -125,10 +125,9 @@ public class PlayState {
 
     }
 
-    public void gameOver(String winners){
-        System.out.println(winners);
+    public void gameOver(boolean murderWin){
         GameStatusChangePacket p = GameStatusChangePacket.make(GAME_OVER);
-        p.winners = winners;
+        p.murderWin = murderWin;
         for (Player player : players.values()){
             player.sendGameStatusChange(p);
         }

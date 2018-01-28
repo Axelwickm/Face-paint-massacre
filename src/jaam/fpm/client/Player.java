@@ -1,6 +1,7 @@
 package jaam.fpm.client;
 
 import jaam.fpm.packet.PlayerActionPacket;
+import jaam.fpm.shared.Settings;
 import jaam.fpm.shared.State;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.Color;
@@ -8,7 +9,10 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Vector2f;
+
+import java.awt.*;
 
 public class Player implements KeyListener {
 
@@ -22,6 +26,8 @@ public class Player implements KeyListener {
 	private Vector2f position = new Vector2f();
 	private Vector2f dir =  new Vector2f();
 
+	private Vector2f specPosition = new Vector2f();
+
 	private float speed = DEFAULT_SPEED;
 
 	private World world;
@@ -34,6 +40,8 @@ public class Player implements KeyListener {
 
 	private Weapon weapon;
 
+	private TrueTypeFont font;
+
 	public Player(World world) {
 		this(world, true);
 	}
@@ -42,6 +50,9 @@ public class Player implements KeyListener {
 		this.world = world;
 		this.controllable = controllable;
 		weapon = new Knife(this);
+
+		if (controllable)
+			font = new TrueTypeFont(new Font("Verdana", Font.BOLD, 32), true);
 	}
 
 	@Override public void inputStarted() { }
@@ -49,8 +60,6 @@ public class Player implements KeyListener {
 	@Override
 	public void keyPressed(final int key, final char c) {
 		//TODO: FIX HEALTH BEHAVIOUR
-		if (health <= 0)
-			return;
 
 		boolean pressed = false;
 
@@ -68,15 +77,18 @@ public class Player implements KeyListener {
 			pressed = true;
 		}
 
+		if (health <= 0)
+			return;
+
 		if (pressed) {
 			sendWalkPacket();
 		}
 
-		if (key == KeyConfig.TOGGLE_WEAPON) {
+		if (key == KeyConfig.TOGGLE_WEAPON && world.isMurdererChosen()) {
 			world.getClient().sendTCP(PlayerActionPacket.make(PlayerActionPacket.Action.TOGGLE_WEAPON));
 			weapon.toggle();
 		}
-		if (key == KeyConfig.USE_WEAPON)
+		if (key == KeyConfig.USE_WEAPON && world.isMurdererChosen())
 			weapon.use();
 	}
 
@@ -99,6 +111,9 @@ public class Player implements KeyListener {
 			released = true;
 		}
 
+		if (health <= 0)
+			return;
+
 		if (released) {
 			if (dir.lengthSquared() == 0) {
 				sendStopPacket();
@@ -116,10 +131,12 @@ public class Player implements KeyListener {
 
 	public void update(final GameContainer gameContainer, final int dt) {
 		if (health <= 0 && (state == State.AlIVE || state == State.MURDERER)){
+			specPosition.set(position);
 			kill();
 		}
 
 		if (state == State.DEAD){
+			specPosition.add(dir.copy().normalise().scale(speed * dt));
 			return;
 		}
 
@@ -166,6 +183,13 @@ public class Player implements KeyListener {
 		g.popTransform();
 	}
 
+	public void renderHUD(final Graphics g) {
+		if (font != null)
+			font.drawString(world.getCameraPosition().x - Settings.SCREEN_WIDTH / 2,
+						  world.getCameraPosition().y + Settings.SCREEN_HEIGHT / 2 - font.getHeight(),
+							state.name(), state == State.MURDERER ? Color.red : Color.white);
+	}
+
 	public void kill(){
 		if (this == world.getMe()){
 			System.out.println("I died.");
@@ -189,6 +213,10 @@ public class Player implements KeyListener {
 
 	public void setPosition(final Vector2f position) {
 		this.position = position;
+	}
+
+	public Vector2f getSpecPosition() {
+		return specPosition;
 	}
 
 	public Vector2f getDir() {
@@ -238,4 +266,8 @@ public class Player implements KeyListener {
     public void setState(State state) {
         this.state = state;
     }
+
+    public boolean isDead() {
+		return state == State.DEAD;
+	}
 }

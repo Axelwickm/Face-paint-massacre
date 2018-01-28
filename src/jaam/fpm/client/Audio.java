@@ -3,6 +3,7 @@ package jaam.fpm.client;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.openal.SoundStore;
 
 import java.util.HashMap;
 
@@ -14,12 +15,16 @@ public class Audio {
 
 	private static Music music;
 
+	private static SoundStore soundStore;
+
 	public static final void play(String sound) {
 		sounds.get(sound).play();
 	}
 
 	public static final void init() {
 		sounds = new HashMap<>();
+
+		soundStore = SoundStore.get();
 
 		try {
 			music = new Music("res/audio/music.wav");
@@ -30,7 +35,11 @@ public class Audio {
 	}
 
 	public static final void playMusic() {
-		music.play();
+		music.loop();
+	}
+
+	public static final void setMusicPitch() {
+		soundStore.setMusicPitch(.5f);
 	}
 
 }
