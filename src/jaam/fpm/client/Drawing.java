@@ -122,11 +122,12 @@ public class Drawing extends Image {
 		comparison.draw(xpos + translateX, ypos + translateY, scale);
 		draw(xpos + translateX, ypos + translateY, scale);
 
-		g.drawString("Brush size: " + brushSize + " (Z and X to change)", 10 + translateX, 30 + translateY);
+		g.drawString("Brush size: " + brushSize + " (X and C to change)", 10 + translateX, 30 + translateY);
 		g.setColor(COLORS[currentColorIndex]);
 		g.drawString("Color: " + COLORS[currentColorIndex].toString() + " (Q and E to change)", 10 + translateX, 50 + translateY);
 		g.setColor(Color.white);
 		g.drawString("Press R to finish drawing", 10 + translateX, 70 + translateY);
+		g.drawString("Z to undo", 10 + translateX, 90 + translateY);
 	}
 
     public boolean isPointWithinDrawing(GameContainer gc, Point pt) throws SlickException {
