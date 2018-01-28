@@ -2,6 +2,7 @@ package jaam.fpm.server;
 
 import jaam.fpm.packet.GameStatusChangePacket;
 import jaam.fpm.packet.TileArrayPacket;
+import jaam.fpm.shared.Settings;
 import jaam.fpm.shared.State;
 import jaam.fpm.shared.Tile;
 import org.newdawn.slick.Game;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import static jaam.fpm.packet.GameStatusChangePacket.StatusChange.GAME_OVER;
 import static jaam.fpm.packet.GameStatusChangePacket.StatusChange.MURDERER_CHOOSEN;
 import static jaam.fpm.packet.GameStatusChangePacket.StatusChange.RESTART_GAME;
 import static java.lang.Math.abs;
@@ -76,10 +78,14 @@ public class PlayState {
                 this.aliveCount += p.state == State.AlIVE ? 1 : 0;
             }
 
-            if (ticks == 1000){
+            if (aliveCount == 0 && 1 < playerCount && false){
+                gameOver("The murderer has completed the FACE PAINT MASSACRE");
+            }
+
+            if (ticks == Settings.MURDERER_CHOOSEN_AFTER){
                 chooseMurderer();
             }
-            if (aliveCount == 0 && 1 < playerCount){
+            else if (ticks == -1){
                 restartGame();
             }
         }
@@ -112,6 +118,18 @@ public class PlayState {
             i++;
         }
 
+    }
+
+    public void gameOver(String winners){
+        System.out.println(winners);
+        GameStatusChangePacket p = GameStatusChangePacket.make(GAME_OVER);
+        p.winners = winners;
+        for (Player player : players.values()){
+            player.sendGameStatusChange(p);
+        }
+
+        ticks = - Settings.ROUND_RESTART_TIME;
+        restartGame();
     }
 
     public void addPlayer(Player player){

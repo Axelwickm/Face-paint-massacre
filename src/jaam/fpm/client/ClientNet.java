@@ -96,6 +96,9 @@ public class ClientNet {
                 else if (object instanceof GameStatusChangePacket){
                     GameStatusChangePacket p = (GameStatusChangePacket) object;
                     switch (p.statusChange){
+                        case GAME_OVER:
+                            System.out.println(p.winners);
+                            break;
                         case RESTART_GAME:
                             System.out.println("(Re)start game");
 

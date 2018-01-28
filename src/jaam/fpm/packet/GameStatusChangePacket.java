@@ -7,6 +7,7 @@ public class GameStatusChangePacket {
 
     public StatusChange statusChange;
     public boolean IAmTheMurderer;
+    public String winners;
 
 
     public static GameStatusChangePacket make(StatusChange statusChange){
@@ -17,6 +18,7 @@ public class GameStatusChangePacket {
 
     public enum StatusChange {
         MURDERER_CHOOSEN,
+        GAME_OVER,
         RESTART_GAME
     }
 }
