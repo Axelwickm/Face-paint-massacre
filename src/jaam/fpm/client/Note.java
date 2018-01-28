@@ -10,8 +10,8 @@ public class Note {
     private Vector2f position;
     private Image image;
 
-    public Note(Image image, Vector2f position) {
-        this.image = image;
+    public Note(byte[] image, Vector2f position) {
+        this.image = decodeImage(image, 256, 256);
         this.position = position;
     }
 
@@ -20,7 +20,10 @@ public class Note {
     }
 
     public void render(final Graphics g) {
-
+        g.pushTransform();
+        g.resetTransform();
+        g.drawImage(image, position.x, position.y);
+        g.popTransform();
     }
 
     public Vector2f getPosition() {
