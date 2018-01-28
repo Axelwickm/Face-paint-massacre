@@ -288,8 +288,17 @@ public class Player implements KeyListener {
 	}
 
 	public void setImage(Image img) {
-		System.out.println(img.getWidth());
-		this.image = img;
+		try {
+			Image img2 = new Image(Player.SIZE, Player.SIZE);
+			Graphics g = img2.getGraphics();
+			g.setColor(new Color(130, 76, 35, 255));
+			g.fillOval(0, 0, Player.SIZE, Player.SIZE);
+			g.drawImage(img, 0, 0);
+			g.flush();
+			this.image = img2;
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Image getImage() {
@@ -313,6 +322,6 @@ public class Player implements KeyListener {
 
 			ib.setRGBA((i / 4) % 256, Math.floorDiv((i / 4), 256), r, g, b, a);
 		}
-		image = ib.getImage().getScaledCopy(Player.SIZE, Player.SIZE);
+		setImage(ib.getImage().getScaledCopy(Player.SIZE, Player.SIZE));
 	}
 }
