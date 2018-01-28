@@ -51,7 +51,7 @@ public class Note {
 
             ib.setRGBA((i / 4) % width, Math.floorDiv((i / 4), width), r, g, b, a);
         }
-        
+
         return ib.getImage();
     }
 }

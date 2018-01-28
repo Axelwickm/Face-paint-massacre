@@ -121,6 +121,10 @@ public class PlayState extends BasicGame
 			currentDrawing.render(gameContainer, graphics, dx, dy);
 
 			currentDrawing.render(gameContainer, graphics, dx, dy);
+
+			graphics.drawString("Ready: " + world.readyCount + "/" + world.playerCount,
+								cameraPos.x - Settings.SCREEN_WIDTH / 2 + 25,
+								cameraPos.y + Settings.SCREEN_HEIGHT / 2 - 50);
 		}
 	}
 
