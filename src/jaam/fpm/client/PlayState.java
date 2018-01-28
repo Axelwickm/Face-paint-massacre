@@ -54,6 +54,7 @@ public class PlayState extends BasicGame
 			if (facepaintMode) {
 				// Send a READY PA-packet and exit facepaint mode
 				packet = PlayerActionPacket.make(PlayerActionPacket.Action.READY);
+				world.readyCount++;
 			} else {
 				packet = PlayerActionPacket.make(PlayerActionPacket.Action.POST_NOTE);
 				float[] pos = {world.getMe().getPosition().x, world.getMe().getPosition().y};
