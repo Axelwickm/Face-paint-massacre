@@ -28,7 +28,7 @@ public class Knife extends Weapon {
 
 		stabbing = STAB_DURATION;
 
-
+		Audio.play("stab");
 
 		if (player == player.getWorld().getMe()) {
 			player.getWorld().getClient().sendTCP(PlayerActionPacket.make(PlayerActionPacket.Action.USE_WEAPON));

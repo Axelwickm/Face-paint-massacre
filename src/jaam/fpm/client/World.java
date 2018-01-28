@@ -53,6 +53,8 @@ public class World {
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
+
+		Audio.init();
 	}
 
 	public void update(final GameContainer gc, final int dt) {
