@@ -69,9 +69,12 @@ public class PlayState extends BasicGame
 			}
 			Image img = ((Drawing) lastImage).getImage();
 			packet.drawing = exportImageData(img);
-			world.getMe().setImage(img.getScaledCopy(Player.SIZE, Player.SIZE));
+			if (facepaintMode) {
+				world.getMe().setImage(img.getScaledCopy(Player.SIZE, Player.SIZE));
+				facepaintMode = false;
+			}
 			client.sendTCP(packet);
-			if (facepaintMode) facepaintMode = false;
+
 
 		}
 		if (!facepaintMode) world.update(gameContainer, dt);
