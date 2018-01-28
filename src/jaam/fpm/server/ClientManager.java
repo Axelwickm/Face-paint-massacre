@@ -105,7 +105,6 @@ public class ClientManager extends Listener {
                     playState.stopMovingPlayer(connection.getID());
                     break;
                 case POST_NOTE:
-                    break;
 				case USE_WEAPON:
 				case TOGGLE_WEAPON:
 					//TODO: NOTHING!

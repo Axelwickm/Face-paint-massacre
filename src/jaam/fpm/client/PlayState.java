@@ -56,19 +56,21 @@ public class PlayState extends BasicGame
 			currentDrawing = null;
 
 			PlayerActionPacket packet;
-
+			Image img;
 			if (facepaintMode) {
 				// Send a READY PA-packet and exit facepaint mode
 				packet = PlayerActionPacket.make(PlayerActionPacket.Action.READY);
 				world.readyCount++;
+				img = ((Drawing) lastImage).getImage();
+				packet.drawing = exportImageData(img);
 			} else {
 				packet = PlayerActionPacket.make(PlayerActionPacket.Action.POST_NOTE);
 				float[] pos = {world.getMe().getPosition().x, world.getMe().getPosition().y};
 				packet.notePosition = pos;
-				System.err.println("Note placed");
+				img = ((Drawing) lastImage).getImage();
+				packet.drawing = exportImageData(img);
+				world.addNote(packet.drawing, world.getMe().getPosition());
 			}
-			Image img = ((Drawing) lastImage).getImage();
-			packet.drawing = exportImageData(img);
 			if (facepaintMode) {
 				world.getMe().setImage(img.getScaledCopy(Player.SIZE, Player.SIZE));
 				facepaintMode = false;

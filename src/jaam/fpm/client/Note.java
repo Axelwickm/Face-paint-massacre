@@ -7,12 +7,13 @@ import org.newdawn.slick.ImageBuffer;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Note {
+
     private Vector2f position;
     private Image image;
 
     public Note(byte[] image, Vector2f position) {
         this.image = decodeImage(image, 256, 256);
-        this.position = position;
+        this.position = position.copy();
     }
 
     public void update(final GameContainer gameContainer, final int dt) {
@@ -21,8 +22,8 @@ public class Note {
 
     public void render(final Graphics g) {
         g.pushTransform();
-        g.resetTransform();
-        g.drawImage(image, position.x, position.y);
+        g.translate(position.x, position.y);
+        g.drawImage(this.image, 0, 0);
         g.popTransform();
     }
 
@@ -49,8 +50,6 @@ public class Note {
             int g = data[i + 1];
             int b = data[i + 2];
             int a = data[i + 3];
-
-            System.out.println(r + " "+ g+ " " +b +" "+ a);
 
             ib.setRGBA((i / 4) % width, Math.floorDiv((i / 4), width), r, g, b, a);
         }

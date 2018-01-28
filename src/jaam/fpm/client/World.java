@@ -1,6 +1,7 @@
 package jaam.fpm.client;
 
 import com.esotericsoftware.kryonet.Client;
+import jaam.fpm.packet.PlayerActionPacket;
 import jaam.fpm.packet.TileArrayPacket;
 import jaam.fpm.shared.Settings;
 import jaam.fpm.shared.Tile;
@@ -49,6 +50,9 @@ public class World {
 
 	private boolean murdererChosen = false;
 
+	private volatile ArrayList<PlayerActionPacket> noteQueue = new ArrayList<>();
+	public volatile boolean accessingNoteQueue = false;
+
 	public World(Client client) {
 		this.client = client;
 		player = new Player(this);
@@ -79,6 +83,17 @@ public class World {
 	}
 
 	public void update(final GameContainer gc, final int dt) {
+
+	    if (!noteQueue.isEmpty()) {
+	        accessingNoteQueue = true;
+	        while(!noteQueue.isEmpty()) {
+	            PlayerActionPacket p = noteQueue.remove(0);
+
+	            notes.add(new Note(p.drawing, new Vector2f(p.notePosition[0], p.notePosition[1])));
+            }
+	        accessingNoteQueue = false;
+        }
+
 		if (!populated) {
 			if (tileArrayPacket != null) {
                 System.out.println("Player pos: "+tileArrayPacket.playerPosition[0]+" "+tileArrayPacket.playerPosition[1]);
@@ -241,4 +256,9 @@ public class World {
 	public void setImage(Image img) {
 		player.setImage(img);
 	}
+
+	public void addToNoteQueue(PlayerActionPacket p) {
+	    while(accessingNoteQueue) {}
+        noteQueue.add(p);
+    }
 }
