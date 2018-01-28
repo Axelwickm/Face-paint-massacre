@@ -9,8 +9,8 @@ public class Note {
     private Vector2f position;
     private Image image;
 
-    public Note(Image image, Vector2f position) {
-        this.image = image;
+    public Note(byte[] image, Vector2f position) {
+        //this.image = image;
         this.position = position;
     }
 
